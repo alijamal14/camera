@@ -115,8 +115,10 @@ export function createAppServer({ root: servedRoot, store, token = randomBytes(2
         if (error instanceof HttpError) throw error;
         throw new HttpError(400, 'invalid json');
       }
-      await store.complete(id, logBody);
-      log(`telemetry bundle ${id} saved`);
+      const saved = await store.complete(id, logBody);
+      const crop = logBody.crop ? ` crop ${Math.round(logBody.crop.sw)}x${Math.round(logBody.crop.sh)} upscale ${logBody.crop.upscale?.toFixed?.(2)}` : '';
+      const bytes = logBody.encoder?.bytes ? ` ${logBody.encoder.bytes} B` : '';
+      log(`[telemetry] saved ${logBody.level ?? ''} ${logBody.outcome ?? ''}${logBody.stage && logBody.stage !== 'done' ? ` at ${logBody.stage}` : ''}${bytes}${crop}\n            ${saved}`);
       return json(200, { id, status: 'complete' });
     }
     throw new HttpError(405, 'method not allowed');
