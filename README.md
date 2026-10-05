@@ -22,7 +22,7 @@ Then open http://localhost:5173/web/ (camera access needs localhost or HTTPS). O
 telemetry store summary at startup, and logs one line per saved capture bundle.
 
 Optional review telemetry: choose **Save captures** (Off / Basic / Diagnostic) on the page. Bundles go to
-`%LOCALAPPDATA%mera-telemetry` (outside the repo), expire after 7 days, and can be listed or deleted:
+`%LOCALAPPDATA%\camera-telemetry` (outside the repo), expire after 7 days, and can be listed or deleted:
 
 ```bash
 npm run telemetry:report

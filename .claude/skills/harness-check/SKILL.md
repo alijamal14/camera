@@ -6,7 +6,7 @@ description: Smoke-test the capture harness in a browser - MediaPipe engines, co
 # Harness check
 
 1. `npm test` must pass.
-2. Start the `harness-verify` launch config (port 5181, store `%LOCALAPPDATA%mera-telemetry-verify`).
+2. Start the `harness-verify` launch config (port 5181, store `%LOCALAPPDATA%\camera-telemetry-verify`).
    Never use port 5173 for checks: `serve` takes over a running harness, which is the user's.
 3. In the page at `/web/`, run:
 
