@@ -1,0 +1,18 @@
+{
+  "name": "nadra-photo-capture",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Prototype browser capture SDK: live white-background preview, PAD-bound capture, decoded-JPEG audit.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "serve": "node scripts/serve.mjs",
+    "pin-assets": "node scripts/pin-assets.mjs",
+    "graphify": "graphify extract . --code-only --no-cluster",
+    "graphify:update": "graphify update .",
+    "graphify:cluster": "graphify cluster-only . --no-label --no-viz"
+  }
+}

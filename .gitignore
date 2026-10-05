@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.DS_Store
+
+# Captures are biometric data; never commit them.
+*.jpg
+*.jpeg
+*.png
+
+# Generated knowledge graph (regenerate with `npm run graphify`)
+graphify-out/

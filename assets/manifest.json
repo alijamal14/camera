@@ -1,0 +1,37 @@
+{
+  "version": "prototype-0",
+  "note": "sha256 values are null until `npm run pin-assets` records them. Production refuses null hashes or an unpinned server runtime.",
+  "models": {
+    "selfieSegmenter": {
+      "url": "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.tflite",
+      "sha256": null,
+      "personMaskIndex": 0
+    },
+    "faceLandmarker": {
+      "url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+      "sha256": null
+    }
+  },
+  "client": {
+    "tasksVision": {
+      "package": "@mediapipe/tasks-vision",
+      "version": "0.10.14",
+      "bundle": { "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs", "sha256": null },
+      "wasmBaseUrl": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm",
+      "wasmFiles": [
+        { "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm/vision_wasm_internal.js", "sha256": null },
+        { "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm/vision_wasm_internal.wasm", "sha256": null },
+        { "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm/vision_wasm_nosimd_internal.js", "sha256": null },
+        { "url": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm/vision_wasm_nosimd_internal.wasm", "sha256": null }
+      ]
+    },
+    "models": ["selfieSegmenter", "faceLandmarker"]
+  },
+  "server": {
+    "note": "The backend is not chosen yet. It must pin its runtime and encoder, and use the shared model hashes above.",
+    "runtime": { "name": null, "version": null },
+    "jpegEncoder": { "name": null, "version": null },
+    "models": ["selfieSegmenter", "faceLandmarker"],
+    "fullFrameFaceCount": { "numFaces": 2, "required": 1 }
+  }
+}

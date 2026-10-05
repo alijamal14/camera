@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photo Capture Harness</title>
+  <style>
+    :root {
+      --bg: #f6f7f9; --surface: #ffffff; --text: #1b1f24; --muted: #5b6470; --border: #d8dde3;
+      --accent: #1f6feb; --ok: #1a7f37; --warn: #9a6700; --bad: #cf222e; --banner: #fff4d6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f1216; --surface: #171b21; --text: #e6e9ed; --muted: #9aa4af; --border: #2c333c;
+        --accent: #4c8dff; --ok: #3fb950; --warn: #d29922; --bad: #f85149; --banner: #3a2f10;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0f1216; --surface: #171b21; --text: #e6e9ed; --muted: #9aa4af; --border: #2c333c;
+      --accent: #4c8dff; --ok: #3fb950; --warn: #d29922; --bad: #f85149; --banner: #3a2f10;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, sans-serif; }
+    main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .banner { background: var(--banner); border: 1px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 12px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; min-width: 0; }
+    .card h2 { font-size: 15px; margin: 0 0 8px; }
+    .stage { position: relative; width: 100%; max-width: 480px; aspect-ratio: 3 / 4; background: #fff; border-radius: 6px; overflow: hidden; }
+    .stage canvas, .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #result-img { width: 100%; max-width: 480px; aspect-ratio: 3 / 4; object-fit: contain; background: #fff; border-radius: 6px; border: 1px solid var(--border); }
+    video { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #guidance { font-weight: 600; margin-top: 8px; }
+    .consent { display: flex; gap: 8px; align-items: flex-start; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+    .PASS { color: var(--ok); } .FAIL { color: var(--bad); } .PENDING_SERVER_VERIFICATION { color: var(--warn); }
+    #log { font: 12px/1.4 ui-monospace, monospace; white-space: pre-wrap; max-height: 220px; overflow: auto; color: var(--muted); margin: 0; }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Photo capture harness</h1>
+  <div class="muted">Prototype for the consolidated capture plan. Output: 480x640 JPEG, at most 30,000 bytes.</div>
+  <div class="banner" id="mock-banner"></div>
+
+  <div class="card">
+    <label class="consent">
+      <input type="checkbox" id="consent">
+      <span>I understand this prototype uses my camera. Frames are processed in this browser and kept in memory only.
+        The mock provider uploads nothing and performs no liveness (PAD) check.</span>
+    </label>
+    <div class="controls">
+      <button id="start" class="primary" disabled>Start camera</button>
+      <button id="capture" disabled>Capture</button>
+      <button id="dispose" disabled>Dispose</button>
+    </div>
+    <div class="muted" id="status">Idle.</div>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h2>Live preview (mirrored display only)</h2>
+      <div class="stage">
+        <canvas id="preview" width="480" height="640"></canvas>
+        <svg viewBox="0 0 480 640" aria-hidden="true">
+          <ellipse cx="240" cy="284" rx="160" ry="236" fill="none" stroke="#1f6feb" stroke-width="3" stroke-dasharray="10 8" opacity="0.8"/>
+          <line x1="140" y1="256" x2="340" y2="256" stroke="#1f6feb" stroke-width="2" opacity="0.6"/>
+        </svg>
+      </div>
+      <div id="guidance" class="muted">Start the camera.</div>
+    </div>
+    <div class="card">
+      <h2>Captured JPEG (unmirrored)</h2>
+      <img id="result-img" alt="Captured photo" hidden>
+      <div id="result-meta" class="muted">No capture yet.</div>
+      <a id="download" hidden download="photo-480x640.jpg">Download JPEG</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Decoded-JPEG audit report</h2>
+    <table>
+      <thead><tr><th>Check</th><th>Enforcement</th><th>Status</th><th>Value</th><th>Note</th></tr></thead>
+      <tbody id="report"><tr><td colspan="5" class="muted">No report yet.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Log</h2>
+    <pre id="log"></pre>
+  </div>
+
+  <video id="video" playsinline muted></video>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

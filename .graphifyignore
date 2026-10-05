@@ -1,0 +1,6 @@
+node_modules
+graphify-out
+*.jpg
+*.jpeg
+*.png
+*.log
