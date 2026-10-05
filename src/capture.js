@@ -21,6 +21,8 @@ const DEFAULT_POLICY = Object.freeze({
  * compose({ rawFrame, segmentation, crop }) returns a JPEG Blob (client fallback/prototype path)
  * decode(blob)                           returns a closable decoded bitmap
  * provider                               provider adapter (see mock-provider.js)
+ * observe(event, payload)                optional synchronous diagnostics observer; resources in
+ *                                        the payload are valid only during the call
  */
 export class NadraPhotoCapture {
   #engines;
@@ -31,8 +33,14 @@ export class NadraPhotoCapture {
   #policy;
   #scheduler;
   #lifecycle;
+  #observe;
+  #clock;
+  #captureActive = false;
+  #diagnosticErrors = 0;
 
   constructor({
+    observe = null,
+    clock = () => performance.now(),
     engines,
     provider,
     grabFrame,
@@ -51,6 +59,8 @@ export class NadraPhotoCapture {
     this.#compose = compose;
     this.#decode = decode;
     this.#policy = { ...DEFAULT_POLICY, ...policy };
+    this.#observe = observe;
+    this.#clock = clock;
     this.#scheduler = new InferenceScheduler({ now });
     this.#lifecycle = new LifecycleController({
       drainTimeoutMs,
@@ -100,75 +110,129 @@ export class NadraPhotoCapture {
 
   // Captures one frame during an active provider challenge and returns the client candidate.
   // Every raw frame, segmentation result and decoded bitmap is released on every path.
+  //
+  // One capture at a time: a second call rejects with CAPTURE_BUSY so injected compose/export
+  // surfaces are never shared between captures.
   capture(session) {
-    return this.#lifecycle.track(async () => {
-      const scope = new ResourceScope();
-      try {
-        const rawFrame = scope.adopt(await this.#grabFrame());
-        this.#checkpoint();
+    if (this.#captureActive) {
+      return Promise.reject(new CaptureRejectedError('CAPTURE_BUSY', 'A capture is already in progress.'));
+    }
+    this.#captureActive = true;
+    return this.#lifecycle
+      .track(() => this.#runCapture(session))
+      .finally(() => {
+        this.#captureActive = false;
+      });
+  }
 
-        const { face, segmentation } = await this.#scheduler.runCapture(({ timestamp }) => {
-          // Full uncropped frame: a second person outside the portrait crop still rejects.
-          const face = assertSingleFace(
-            this.#engines.landmarker.detectForVideo(rawFrame, timestamp),
-            'full raw frame',
-          );
-          const segmentation = scope.adopt(this.#engines.segmenter.segmentForVideo(rawFrame, timestamp));
-          return { face, segmentation };
-        });
-        this.#checkpoint();
+  async #runCapture(session) {
+    const scope = new ResourceScope();
+    let stage = 'frame';
+    let stageStart = this.#clock();
+    const enter = (next) => {
+      const now = this.#clock();
+      this.#emit('stage', { name: stage, ms: now - stageStart });
+      stage = next;
+      stageStart = now;
+    };
+    try {
+      const rawFrame = scope.adopt(await this.#grabFrame());
+      this.#checkpoint();
+      this.#emit('frame', { rawFrame });
 
-        // The exact selected frame is part of the evidence PAD evaluates.
-        const frameId = await this.#provider.recordChallengeFrame(session, rawFrame, { selected: true });
-        const pad = await this.#provider.finishChallenge(session, frameId);
-        if (!pad.passed) throw new PadRejectedError(pad);
-        this.#checkpoint();
-
-        const crop = computePortraitCrop(
-          measureFace(face, rawFrame.width, rawFrame.height),
-          rawFrame.width,
-          rawFrame.height,
+      enter('inference');
+      const { face, segmentation } = await this.#scheduler.runCapture(({ timestamp }) => {
+        // Full uncropped frame: a second person outside the portrait crop still rejects.
+        const face = assertSingleFace(
+          this.#engines.landmarker.detectForVideo(rawFrame, timestamp),
+          'full raw frame',
         );
-        if (crop.outOfFrame) {
-          throw new CaptureRejectedError(
-            'OUT_OF_FRAME',
-            'The head and shoulders do not fit in the camera frame. Step back and centre your face.',
-            { crop },
-          );
-        }
-        if (this.#policy.enforceUpscale && crop.upscale > this.#policy.maxUpscale) {
-          throw new CaptureRejectedError(
-            'UPSCALE_LIMIT',
-            `Face is too small in the camera frame (needs ${crop.upscale.toFixed(2)}x upscaling). Move closer.`,
-            { crop },
-          );
-        }
+        const segmentation = scope.adopt(this.#engines.segmenter.segmentForVideo(rawFrame, timestamp));
+        return { face, segmentation };
+      });
+      this.#checkpoint();
+      this.#emit('segmented', { rawFrame, segmentation, face });
 
-        const jpeg = await this.#compose({ rawFrame, segmentation, crop });
-        this.#checkpoint();
-        const report = await auditJpeg(jpeg, { decode: this.#decode, landmarker: this.#engines.auditLandmarker });
-        report.items.push({
-          id: 'upscale',
-          enforcement: this.#policy.enforceUpscale ? 'HARD' : 'ADVISORY',
-          status: crop.upscale <= this.#policy.maxUpscale ? 'PASS' : 'FAIL',
-          value: crop.upscale,
-          profile: report.profile,
-          reason: `Product policy: <= ${this.#policy.maxUpscale}x`,
-        });
+      // The exact selected frame is part of the evidence PAD evaluates.
+      enter('pad');
+      const frameId = await this.#provider.recordChallengeFrame(session, rawFrame, { selected: true });
+      const pad = await this.#provider.finishChallenge(session, frameId);
+      if (!pad.passed) throw new PadRejectedError(pad);
+      this.#checkpoint();
 
-        const provider = await this.#provider.generateOrVerifyPhoto(session, { frameId, candidateJpeg: jpeg, crop });
-        return {
-          jpeg,
-          frameId,
-          crop,
-          report,
-          provider,
-          status: provider.accepted === true ? 'ProviderAccepted' : 'ClientValidated',
-        };
-      } finally {
-        this.#lifecycle.recordCleanupError(...scope.releaseAll());
+      enter('crop');
+      const crop = computePortraitCrop(
+        measureFace(face, rawFrame.width, rawFrame.height),
+        rawFrame.width,
+        rawFrame.height,
+      );
+      if (crop.outOfFrame) {
+        throw new CaptureRejectedError(
+          'OUT_OF_FRAME',
+          'The head and shoulders do not fit in the camera frame. Step back and centre your face.',
+          { crop },
+        );
       }
-    });
+      if (this.#policy.enforceUpscale && crop.upscale > this.#policy.maxUpscale) {
+        throw new CaptureRejectedError(
+          'UPSCALE_LIMIT',
+          `Face is too small in the camera frame (needs ${crop.upscale.toFixed(2)}x upscaling). Move closer.`,
+          { crop },
+        );
+      }
+
+      this.#emit('cropped', { rawFrame, segmentation, crop });
+
+      enter('compose');
+      const jpeg = await this.#compose({ rawFrame, segmentation, crop });
+      this.#checkpoint();
+      this.#emit('encoded', { jpeg, crop });
+
+      enter('audit');
+      const report = await auditJpeg(jpeg, { decode: this.#decode, landmarker: this.#engines.auditLandmarker });
+      report.items.push({
+        id: 'upscale',
+        enforcement: this.#policy.enforceUpscale ? 'HARD' : 'ADVISORY',
+        status: crop.upscale <= this.#policy.maxUpscale ? 'PASS' : 'FAIL',
+        value: crop.upscale,
+        profile: report.profile,
+        reason: `Product policy: <= ${this.#policy.maxUpscale}x`,
+      });
+
+      this.#emit('audited', { report });
+
+      enter('provider');
+      const provider = await this.#provider.generateOrVerifyPhoto(session, { frameId, candidateJpeg: jpeg, crop });
+      enter('done');
+      return {
+        jpeg,
+        frameId,
+        crop,
+        report,
+        provider,
+        status: provider.accepted === true ? 'ProviderAccepted' : 'ClientValidated',
+      };
+    } catch (error) {
+      this.#emit('stage', { name: stage, ms: this.#clock() - stageStart });
+      this.#emit('rejected', { stage, error });
+      throw error;
+    } finally {
+      this.#lifecycle.recordCleanupError(...scope.releaseAll());
+    }
+  }
+
+  get diagnosticErrors() {
+    return this.#diagnosticErrors;
+  }
+
+  // Observers are synchronous and read-only. A throwing observer never affects the capture.
+  #emit(event, payload) {
+    if (!this.#observe) return;
+    try {
+      this.#observe(event, payload);
+    } catch {
+      this.#diagnosticErrors++;
+    }
   }
 
   // Stops a capture between steps once disposal has begun; the finally block still releases.

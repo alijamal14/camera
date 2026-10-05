@@ -6,6 +6,16 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["scripts/serve.mjs"],
       "port": 5173
+    },
+    {
+      "name": "harness-verify",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve.mjs",
+        "--port=5181",
+        "--telemetry-dir=C:\Users\ali\AppData\Local\camera-telemetry-verify"
+      ],
+      "port": 5181
     }
   ]
 }

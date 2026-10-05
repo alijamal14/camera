@@ -57,7 +57,11 @@ export async function createEngines(manifest, { production = false, log = () => 
       auditLandmarker: scope.adopt(await create(vision.FaceLandmarker, landmarkerOptions('IMAGE'))),
     };
     for (const engine of Object.values(engines)) scope.transfer(engine);
-    return { engines, delegate };
+    const models = {
+      selfieSegmenter: { sha256: segmenterModel.sha256, pinned: segmenterModel.pinned },
+      faceLandmarker: { sha256: landmarkerModel.sha256, pinned: landmarkerModel.pinned },
+    };
+    return { engines, delegate, models };
   } finally {
     // Closes engines only when creation failed part-way; successful ones were transferred.
     scope.releaseAll();

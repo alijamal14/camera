@@ -13,6 +13,8 @@
     "pin-assets": "node scripts/pin-assets.mjs",
     "graphify": "graphify extract . --code-only --no-cluster",
     "graphify:update": "graphify update .",
-    "graphify:cluster": "graphify cluster-only . --no-label --no-viz"
+    "graphify:cluster": "graphify cluster-only . --no-label --no-viz",
+    "telemetry:report": "node scripts/telemetry-report.mjs",
+    "telemetry:purge": "node scripts/telemetry-purge.mjs"
   }
 }

@@ -9,3 +9,7 @@ node_modules/
 
 # Generated knowledge graph (regenerate with `npm run graphify`)
 graphify-out/
+
+# Telemetry is stored outside the repo; never commit a stray copy.
+telemetry/
+.camera-telemetry-store

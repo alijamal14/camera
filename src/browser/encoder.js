@@ -3,7 +3,10 @@ import { CaptureRejectedError } from '../errors.js';
 
 // Highest JPEG quality (in whole percent) that fits the byte cap, down to a floor.
 // The 0.55 floor is an initial Class B candidate; quality is a setting, not a quality measure.
-export async function encodeJpegUnderCap(canvas, { maxBytes = MAX_JPEG_BYTES, minQuality = 0.55, maxQuality = 0.95 } = {}) {
+export async function encodeJpegUnderCap(
+  canvas,
+  { maxBytes = MAX_JPEG_BYTES, minQuality = 0.55, maxQuality = 0.95, onEncoded = () => {} } = {},
+) {
   let low = Math.round(minQuality * 100);
   let high = Math.round(maxQuality * 100);
   let best = null;
@@ -27,5 +30,6 @@ export async function encodeJpegUnderCap(canvas, { maxBytes = MAX_JPEG_BYTES, mi
   if (best.blob.type !== 'image/jpeg') {
     throw new CaptureRejectedError('ENCODING_MIME', `Encoder produced ${best.blob.type}, not image/jpeg.`);
   }
+  onEncoded({ name: 'canvas-convertToBlob', quality: best.quality / 100, bytes: best.blob.size, minQuality });
   return best.blob;
 }

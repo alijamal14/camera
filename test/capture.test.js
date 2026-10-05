@@ -186,6 +186,91 @@ describe('TC-11 capture resource ownership', () => {
   });
 });
 
+describe('diagnostics observer and single-capture policy', () => {
+  async function observed(options = {}) {
+    const events = [];
+    const ctx = await setup({ ...options, drainTimeoutMs: 20 });
+    return { ...ctx, events };
+  }
+
+  test('emits stage events in order while resources are still owned', async () => {
+    const events = [];
+    const tracker = createTracker();
+    const { engines } = createEngines(tracker);
+    const { provider, session } = await createProviderSession();
+    const capture = new NadraPhotoCapture({
+      engines,
+      provider,
+      grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),
+      compose: async () => jpegBlob(),
+      decode: async () => tracker.bitmap(480, 640, 'decoded'),
+      observe: (event, payload) => {
+        if (event === 'stage') return;
+        const owned = [payload.rawFrame, payload.segmentation].filter(Boolean);
+        events.push([event, owned.every((r) => !r.closed)]);
+      },
+    });
+    await capture.capture(session);
+    assert.deepEqual(events, [
+      ['frame', true],
+      ['segmented', true],
+      ['cropped', true],
+      ['encoded', true],
+      ['audited', true],
+    ]);
+    assert.deepEqual(tracker.open(), []);
+  });
+
+  test('early rejection reports its stage without crop or image events', async () => {
+    const events = [];
+    const tracker = createTracker();
+    const { engines } = createEngines(tracker, { frameFaces: 2 });
+    const { provider, session } = await createProviderSession();
+    const capture = new NadraPhotoCapture({
+      engines,
+      provider,
+      grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),
+      compose: async () => jpegBlob(),
+      decode: async () => tracker.bitmap(480, 640, 'decoded'),
+      observe: (event, payload) => events.push([event, payload.stage ?? payload.name]),
+    });
+    await assert.rejects(capture.capture(session), FaceCountError);
+    const names = events.filter(([e]) => e !== 'stage').map(([e, s]) => (e === 'rejected' ? `rejected:${s}` : e));
+    assert.deepEqual(names, ['frame', 'rejected:inference']);
+  });
+
+  test('a throwing observer never fails the capture', async () => {
+    const tracker = createTracker();
+    const { engines } = createEngines(tracker);
+    const { provider, session } = await createProviderSession();
+    const capture = new NadraPhotoCapture({
+      engines,
+      provider,
+      grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),
+      compose: async () => jpegBlob(),
+      decode: async () => tracker.bitmap(480, 640, 'decoded'),
+      observe: () => {
+        throw new Error('observer bug');
+      },
+    });
+    const result = await capture.capture(session);
+    assert.equal(result.status, 'ClientValidated');
+    assert.ok(capture.diagnosticErrors > 0);
+    assert.deepEqual(tracker.open(), []);
+  });
+
+  test('a second concurrent capture is rejected with CAPTURE_BUSY', async () => {
+    const frame = deferred();
+    const tracker = createTracker();
+    const { capture, session } = await observed({ grabFrame: () => frame.promise });
+    const first = capture.capture(session);
+    await assert.rejects(capture.capture(session), (error) => error.code === 'CAPTURE_BUSY');
+    frame.resolve(tracker.bitmap(FRAME.width, FRAME.height, 'raw'));
+    await first;
+    assert.deepEqual(tracker.open(), []);
+  });
+});
+
 describe('TC-10 face count', () => {
   test('two faces in the full raw frame reject before cropping or PAD submission', async () => {
     const { capture, tracker, session, provider } = await setup({ frameFaces: 2 });

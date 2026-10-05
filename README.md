@@ -35,6 +35,7 @@ Then open http://localhost:5173/web/ (camera access needs localhost or HTTPS).
 | `src/browser/` | MediaPipe engine creation, compositor, JPEG encoder |
 | `web/` | Test harness page |
 | `docs/architecture.md` | Plan-to-code map, test status, production gates |
+| `src/telemetry.js`, `scripts/server.mjs`, `scripts/telemetry-*.mjs`, `web/recorder.js` | Opt-in local review telemetry |
 
 ## Pinning assets
 

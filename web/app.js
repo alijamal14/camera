@@ -8,6 +8,8 @@ import { countFaces } from '../src/face-count.js';
 import { OUTPUT, computePortraitCrop, measureFace } from '../src/geometry.js';
 import { InstanceDisposedError } from '../src/lifecycle.js';
 import { MOCK_LABEL, MockProvider } from '../src/mock-provider.js';
+import { TelemetryClient } from '../src/telemetry.js';
+import { createCaptureRecorder } from './recorder.js';
 
 const $ = (id) => document.getElementById(id);
 const video = $('video');
@@ -20,6 +22,12 @@ let rafId = 0;
 let previewBusy = false;
 let personMaskIndex = 0;
 let resultUrl = null;
+let lastPreview = null;
+let recorder = null; // Telemetry recorder for the capture in progress (one capture at a time).
+let pipelineInfo = {};
+
+// Session-only: the level is never persisted, so every page load starts with telemetry off.
+const telemetry = new TelemetryClient({ token: document.querySelector('meta[name="telemetry-token"]')?.content });
 
 $('mock-banner').textContent = `${MOCK_LABEL}. Results are ClientValidated at most, never ProviderAccepted.`;
 
@@ -61,8 +69,19 @@ async function start() {
     log(`Camera ${video.videoWidth}x${video.videoHeight}.`);
 
     setStatus('Loading MediaPipe models...');
-    const { engines, delegate } = await createEngines(manifest, { production: false, log });
+    const { engines, delegate, models } = await createEngines(manifest, { production: false, log });
     log(`Engines ready on ${delegate}.`);
+    pipelineInfo = {
+      manifestVersion: manifest.version,
+      tasksVision: manifest.client.tasksVision.version,
+      segmenterModel: 'selfie_segmenter/float16/1',
+      segmenterSha256: models.selfieSegmenter.sha256,
+      segmenterPinned: models.selfieSegmenter.pinned,
+      landmarkerSha256: models.faceLandmarker.sha256,
+      landmarkerPinned: models.faceLandmarker.pinned,
+      delegate,
+      matteSource: 'mediapipe-confidence',
+    };
 
     const exportCompositor = new Compositor();
     const previewCompositor = new Compositor();
@@ -83,8 +102,10 @@ async function start() {
           mask: segmentation.confidenceMasks[personMaskIndex],
           crop,
         });
-        return encodeJpegUnderCap(canvas);
+        safely(() => recorder?.onComposite(exportCompositor, canvas));
+        return encodeJpegUnderCap(canvas, { onEncoded: (info) => safely(() => recorder?.onEncoded(info)) });
       },
+      observe: (event, payload) => recorder?.observe(event, payload),
       decode: (blob) => createImageBitmap(blob),
       stopSources: () => {
         cancelAnimationFrame(rafId);
@@ -93,7 +114,7 @@ async function start() {
       },
     });
 
-    const renderPreview = ({ segmentation, faces }) => {
+    const renderPreview = ({ segmentation, faces, jobId }) => {
       const vw = video.videoWidth;
       const vh = video.videoHeight;
       const crop = { sw: vh * 0.75, sh: vh, sx: (vw - vh * 0.75) / 2, sy: 0 };
@@ -103,6 +124,7 @@ async function start() {
         previewCtx.setTransform(-1, 0, 0, 1, OUTPUT.width, 0); // Mirror the display only.
         previewCtx.drawImage(canvas, 0, 0);
         previewCtx.setTransform(1, 0, 0, 1, 0, 0);
+        lastPreview = { jobId, at: performance.now() };
       }
       $('guidance').textContent = guidanceFor(faces, vw, vh);
     };
@@ -143,13 +165,42 @@ function guidanceFor(faces, frameWidth, frameHeight) {
   return 'Ready.';
 }
 
+// Diagnostics must never affect a capture.
+function safely(fn) {
+  try {
+    fn();
+  } catch (error) {
+    log(`Telemetry copy failed: ${error.message}`);
+  }
+}
+
+function cameraInfo() {
+  const settings = stream?.getVideoTracks()[0]?.getSettings() ?? {};
+  return { videoWidth: video.videoWidth, videoHeight: video.videoHeight, track: settings };
+}
+
 async function doCapture() {
   $('capture').disabled = true;
   setStatus('Capturing...');
+  const bundle = telemetry.begin(); // null when telemetry is off: no copies, no requests.
+  recorder = null;
+  if (bundle) {
+    safely(() => {
+      recorder = createCaptureRecorder(bundle, {
+        previewCanvas: $('preview'),
+        lastPreview,
+        camera: cameraInfo(),
+        pipeline: pipelineInfo,
+        personMaskIndex,
+        threshold: 0.5,
+      });
+    });
+  }
   const session = await provider.initSession();
+  let result = null;
   try {
     await provider.startChallenge(session);
-    const result = await capture.capture(session);
+    result = await capture.capture(session);
     showResult(result);
     setStatus(`Captured: ${result.status} (${result.provider.status}).`);
     log(`Capture ${result.frameId}: ${result.jpeg.size} bytes, ${result.status}.`);
@@ -162,7 +213,32 @@ async function doCapture() {
     await provider.cancelSession(session); // Mock evidence deleted after use.
     if (!capture.isDisposed) $('capture').disabled = false;
   }
+  const finishing = recorder;
+  recorder = null;
+  if (finishing) {
+    const outcome = result ? (result.status === 'ProviderAccepted' ? 'provider-accepted' : 'client-validated') : 'rejected';
+    const saved = await finishing.finish({ outcome, result, diagnosticErrors: capture.diagnosticErrors });
+    setTelemetryStatus(saved.status === 'saved' ? `Saved bundle ${saved.id}.` : `Telemetry ${saved.status}${saved.error?.code ? ` (${saved.error.code})` : ''}.`);
+  }
 }
+
+function setTelemetryStatus(text) {
+  $('telemetry-status').textContent = text;
+}
+
+$('telemetry-level').addEventListener('change', (event) => {
+  telemetry.setLevel(event.target.value); // Lowering aborts uploads and discards pending bundles.
+  setTelemetryStatus(event.target.value === 'off' ? 'Off. Nothing is copied or saved.' : `On (${event.target.value}) for this page session only.`);
+});
+
+$('telemetry-delete').addEventListener('click', async () => {
+  try {
+    await telemetry.deleteAll();
+    setTelemetryStatus('All saved telemetry deleted.');
+  } catch (error) {
+    setTelemetryStatus(`Delete failed: ${error.code ?? error.message}`);
+  }
+});
 
 function showResult(result) {
   if (resultUrl) URL.revokeObjectURL(resultUrl);

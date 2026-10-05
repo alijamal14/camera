@@ -17,6 +17,15 @@ export class Compositor {
     this.#threshold = threshold;
   }
 
+  get threshold() {
+    return this.#threshold;
+  }
+
+  // Subject cutout from the last composite(); its alpha is the matte used. Valid until the next call.
+  get cutout() {
+    return this.#cutout;
+  }
+
   // source: unmirrored frame (ImageBitmap or video). mask: MPMask spanning the full frame.
   // Returns the 480x640 output canvas, valid until the next composite() call.
   composite({ source, frameWidth, frameHeight, mask, crop }) {

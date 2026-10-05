@@ -33,6 +33,29 @@ The plan is authoritative; this page maps it to code.
 | `src/assets.js` | 4 | Production refuses unpinned hashes or server runtime |
 | `src/browser/*` | 4, 5, 6 | MediaPipe 0.10.14 engines, compositor, encoder |
 
+## Review telemetry (opt-in, local)
+
+Plan: `docs/premium-quality-plan-review.md` (spec) and the approved phased plan. Phase 1 is built.
+
+- `NadraPhotoCapture` accepts `observe(event, payload)`. Events are emitted in stage order:
+  1. `frame`
+  2. `segmented`
+  3. `cropped`
+  4. `encoded`
+  5. `audited`
+
+  Each stage also emits `stage {name, ms}`, and a failure emits `rejected {stage, error}`.
+  Payload resources are valid only during the call. Observer errors are counted in `diagnosticErrors`.
+- `web/recorder.js` copies what each stage has into a `TelemetryBundle`. The preview copy is taken at click time.
+- `src/telemetry.js`:
+  - Levels: `off`, `basic` (preview, output, log) and `diagnostic` (+ raw crop, alpha, composite, float32 confidence).
+  - Lowering the level aborts uploads and discards pending bundles.
+  - `buildLog` keeps allowlisted fields only.
+- Server (`scripts/server.mjs`, `scripts/telemetry-store.mjs`):
+  - Static allowlist (`/web`, `/src`, `/assets/manifest.json`); exact Host/Origin checks and a per-process token.
+  - Validated artifact names and formats, quota, and atomic `partial → bundles/<UTC date>/<id>` moves.
+  - 7-day retention sweep. Purge refuses unmarked directories.
+
 ## Observed MediaPipe behaviour (0.10.14)
 
 - `selfie_segmenter` returns one confidence mask at the input resolution; index 0 is the person.

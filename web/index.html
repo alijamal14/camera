@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="telemetry-token" content="__TELEMETRY_TOKEN__">
   <title>Photo Capture Harness</title>
   <style>
     :root {
@@ -35,6 +36,7 @@
     button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
     button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+    select { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); max-width: 100%; }
     #guidance { font-weight: 600; margin-top: 8px; }
     .consent { display: flex; gap: 8px; align-items: flex-start; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -62,6 +64,26 @@
       <button id="dispose" disabled>Dispose</button>
     </div>
     <div class="muted" id="status">Idle.</div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Review telemetry (local only, off by default)</h2>
+    <p class="muted" style="margin:0 0 8px">
+      When on, each capture saves a bundle to a folder on this computer for developer and AI-agent review:
+      the displayed (mirrored) preview, the final JPEG and a structured log. Diagnostic also saves the
+      unmirrored raw crop, the alpha matte, the pre-JPEG composite and raw mask confidence.
+      Bundles expire after 7 days. Nothing is uploaded to any external service. This setting resets on reload.
+    </p>
+    <div class="controls" style="align-items:center">
+      <label for="telemetry-level">Save captures:</label>
+      <select id="telemetry-level">
+        <option value="off" selected>Off</option>
+        <option value="basic">Basic: preview, JPEG, log</option>
+        <option value="diagnostic">Diagnostic: + raw crop, alpha, composite, confidence</option>
+      </select>
+      <button id="telemetry-delete">Delete all saved telemetry</button>
+    </div>
+    <div class="muted" id="telemetry-status">Off. Nothing is copied or saved.</div>
   </div>
 
   <div class="grid" style="margin-top:16px">
