@@ -6,7 +6,10 @@ Read `docs/architecture.md` first. The authoritative plan lives outside the repo
 ## Commands
 
 - `npm test`: unit tests (node:test, no dependencies). Must pass before committing.
-- `npm run serve`: harness at http://localhost:5173/web/ (`PORT` overrides).
+- `npm run serve`: harness at http://localhost:5173/web/ (`PORT` or `--port=`, `--telemetry-dir=`).
+  Replaces a stale `scripts/serve.mjs` on the port (only that; never other programs), prints the
+  telemetry summary and one line per saved bundle. Do not start it on 5173 while the user is
+  testing: it would replace their server. Use `harness-verify` instead.
 - `npm run pin-assets`: record SHA-256 hashes in `assets/manifest.json`. A trust decision; ask first.
 - `npm run telemetry:report`: summarise saved review bundles. `npm run telemetry:purge`: delete them all.
 - Verification server without touching the user's port or store: the `harness-verify` launch config

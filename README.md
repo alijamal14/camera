@@ -17,7 +17,20 @@ npm test
 npm run serve
 ```
 
-Then open http://localhost:5173/web/ (camera access needs localhost or HTTPS).
+Then open http://localhost:5173/web/ (camera access needs localhost or HTTPS). One terminal is enough:
+`serve` replaces an older copy of this harness on the port (never another program), prints the
+telemetry store summary at startup, and logs one line per saved capture bundle.
+
+Optional review telemetry: choose **Save captures** (Off / Basic / Diagnostic) on the page. Bundles go to
+`%LOCALAPPDATA%camera-telemetry` (outside the repo), expire after 7 days, and can be listed or deleted:
+
+```bash
+npm run telemetry:report
+```
+
+```bash
+npm run telemetry:purge
+```
 
 ## Layout
 

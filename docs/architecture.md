@@ -55,6 +55,8 @@ Plan: `docs/premium-quality-plan-review.md` (spec) and the approved phased plan.
   - Static allowlist (`/web`, `/src`, `/assets/manifest.json`); exact Host/Origin checks and a per-process token.
   - Validated artifact names and formats, quota, and atomic `partial → bundles/<UTC date>/<id>` moves.
   - 7-day retention sweep. Purge refuses unmarked directories.
+- `scripts/serve.mjs`: one-terminal workflow. Reclaims the port from a stale harness (matched by
+  command line `scripts/serve.mjs`), prints the store summary, logs each saved bundle with its path.
 
 ## Observed MediaPipe behaviour (0.10.14)
 

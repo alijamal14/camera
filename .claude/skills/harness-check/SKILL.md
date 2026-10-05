@@ -6,7 +6,8 @@ description: Smoke-test the capture harness in a browser - MediaPipe engines, co
 # Harness check
 
 1. `npm test` must pass.
-2. Start the `harness` launch config (port 5173). If the port is busy, an earlier server is running.
+2. Start the `harness-verify` launch config (port 5181, store `%LOCALAPPDATA%camera-telemetry-verify`).
+   Never use port 5173 for checks: `serve` takes over a running harness, which is the user's.
 3. In the page at `/web/`, run:
 
    ```js
@@ -29,4 +30,9 @@ description: Smoke-test the capture harness in a browser - MediaPipe engines, co
    `Compositor` and `encodeJpegUnderCap`. Expect `image/jpeg`, <= 30,000 bytes, 480x640 decoded,
    and a pure white (255,255,255) corner after decoding.
 5. Console errors other than MediaPipe `INFO:` lines are failures.
-6. Stop the server when done so `npm run serve` can use the port.
+6. Telemetry path: in the page, build `NadraPhotoCapture` with synthetic engines, the real
+   `Compositor`/encoder, `createCaptureRecorder` (`/web/recorder.js`) and `TelemetryClient`
+   (token from `meta[name=telemetry-token]`). Run off, diagnostic and basic captures. Expect: off sends
+   no `/telemetry` requests; diagnostic stores 6 artifacts + log.json; basic stores preview, output,
+   log; `GET /telemetry/...` returns 403; logs contain no injected device ids.
+7. Stop the server when done.
