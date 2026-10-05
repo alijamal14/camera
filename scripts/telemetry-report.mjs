@@ -7,6 +7,11 @@ import { fileURLToPath } from 'node:url';
 import { defaultTelemetryDir, validateStoreDir } from './telemetry-store.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
+if (!existsSync(defaultTelemetryDir())) {
+  console.log(`No telemetry yet: ${defaultTelemetryDir()} does not exist.`);
+  console.log('It is created when `npm run serve` starts; then set "Save captures" on the page and capture.');
+  process.exit(0);
+}
 const dir = await validateStoreDir(defaultTelemetryDir(), { servedRoot: root, create: false });
 const rows = [];
 for (const day of existsSync(join(dir, 'bundles')) ? await readdir(join(dir, 'bundles')) : []) {
