@@ -58,7 +58,8 @@
     group.setAttribute('aria-label', 'Color theme');
 
     const labels = {
-      system: 'System',
+      // Short label keeps the control from colliding with .app-nav on narrow viewports
+      system: 'Auto',
       dark: 'Dark',
       light: 'Light',
     };

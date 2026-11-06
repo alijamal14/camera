@@ -574,9 +574,14 @@ html[data-theme="dark"] .steps li::before { color: #041018; }
 }
 
 @media (max-width: 480px) {
+  .theme-toggle {
+    padding: 2px;
+    gap: 0;
+  }
+
   .theme-toggle__option {
-    font-size: 0.68rem;
-    padding: 0.45rem 0.55rem;
+    font-size: 0.62rem;
+    padding: 0.38rem 0.42rem;
   }
 }
 
