@@ -14,6 +14,7 @@ Docs: [ali.mk313.com/camera](https://ali.mk313.com/camera/)
 
 - **Client-only:** [Implement the browser SDK](https://ali.mk313.com/camera/#/guide/client-only) (`ClientValidated`)
 - **Server / provider:** [Implement the backend contract](https://ali.mk313.com/camera/#/guide/server-provider) (`ProviderAccepted`)
+- **Background removal:** [Client-owned matte guide](https://ali.mk313.com/camera/#/guide/background-removal) (Mermaid + compose examples)
 
 ## Run
 

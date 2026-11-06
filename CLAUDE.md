@@ -20,6 +20,7 @@ outside this repository.
 - `npm run pin-assets`: record SHA-256 hashes in `assets/manifest.json`. A trust decision; ask first.
 - `npm run telemetry:report`: summarise saved review bundles. `npm run telemetry:purge`: delete them all.
 - `npm run graphify:update`: refresh `graphify-out/` after code changes (AST-only).
+- `npm run docs:check`: Docsify sidebar + root-absolute link integrity (also runs under `npm test`).
 - Verification server without touching the user's port or store: the `harness-verify` launch config
   (port 5181, `--telemetry-dir=%LOCALAPPDATA%/camera-telemetry-verify`). `serve` expands
   `%LOCALAPPDATA%` / `${LOCALAPPDATA}` via `expandStoreDir` in `scripts/telemetry-store.mjs`.
@@ -48,13 +49,15 @@ outside this repository.
 
 - `.claude/skills/harness-check`: smoke-test engines, compositor and encoder in the browser.
 - `.claude/skills/capture-review`: review captured JPEGs against the framing and quality targets.
-- `.claude/skills/implement-path`: route client-only vs server/provider work to the right docs.
+- `.claude/skills/implement-path`: route client-only vs server/provider work to the right docs
+  (includes client-owned background removal / matte).
 - Public mirrors (GitHub Pages): `docs/skills/*.md` — keep in sync when editing `.claude/skills`.
 
 ## Tools / launch
 
 - `.claude/launch.json`: `harness` (5173) and `harness-verify` (5181 + verify telemetry dir).
-- Docs site is Docsify under `docs/` (`.nojekyll`); do not reintroduce Jekyll Cayman `_config.yml`.
+- Docs site is Docsify + Mermaid under `docs/` (`.nojekyll`); do not reintroduce Jekyll Cayman `_config.yml`.
+- Theme: Auto / Dark / Light in `docs/assets/theme.js` (persists `camera-docs-theme`).
 
 ## graphify
 
