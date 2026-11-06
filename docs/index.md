@@ -10,7 +10,8 @@ PAD-bound capture, decoded-JPEG audit.
 **Not affiliated with, endorsed by, or connected to any government identity authority.** Do not
 present outputs as officially compliant.
 
-Source: [github.com/alijamal14/camera](https://github.com/alijamal14/camera)
+Source: [github.com/alijamal14/camera](https://github.com/alijamal14/camera) ·
+Site: [ali.mk313.com/camera](http://ali.mk313.com/camera/)
 
 ## Quick start
 
