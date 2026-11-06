@@ -112,6 +112,8 @@ body:not(.ready) { overflow: auto; }
 .sidebar ul li a:hover {
   color: var(--accent) !important;
   background: var(--accent-soft);
+  /* Neutralize Docsify vue.css active right-border marker */
+  border-right: 0 !important;
 }
 
 .sidebar ul li strong {
@@ -247,6 +249,15 @@ main {
   color: var(--ink);
   font-size: 0.88rem;
   line-height: 1.55;
+}
+
+/* vue.css Prism tokens assume a light canvas; recolor for dark raised pre */
+html[data-theme="dark"] .markdown-section pre .token.punctuation {
+  color: var(--ink-soft) !important;
+}
+
+html[data-theme="dark"] .markdown-section pre .token.comment {
+  color: color-mix(in srgb, var(--ink-soft) 75%, var(--paper)) !important;
 }
 
 .markdown-section blockquote {
@@ -563,11 +574,6 @@ html[data-theme="dark"] .steps li::before { color: #041018; }
 }
 
 @media (max-width: 480px) {
-  .theme-toggle {
-    right: 0.65rem;
-    bottom: 0.65rem;
-  }
-
   .theme-toggle__option {
     font-size: 0.68rem;
     padding: 0.45rem 0.55rem;
@@ -596,6 +602,14 @@ html[data-theme="dark"] .steps li::before { color: #041018; }
 }
 
 @media (max-width: 768px) {
-  .markdown-section { padding: 1.25rem 1.1rem 3rem !important; }
+  /* Keep clear of bottom card CTAs and the Docsify sidebar hamburger */
+  .theme-toggle {
+    top: 0.55rem;
+    bottom: auto;
+    left: 0.55rem;
+    right: auto;
+  }
+
+  .markdown-section { padding: 3.25rem 1.1rem 3.5rem !important; }
   .hero { padding: 1.25rem; border-radius: 18px; }
 }
