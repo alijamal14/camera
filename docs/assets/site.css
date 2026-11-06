@@ -417,28 +417,53 @@ html[data-theme="dark"] .btn-primary { color: #041018 !important; }
 
 html[data-theme="dark"] .steps li::before { color: #041018; }
 
-/* Theme toggle */
+/* Theme control: System / Dark / Light */
 .theme-toggle {
   position: fixed;
   right: 1.1rem;
   bottom: 1.1rem;
   z-index: 40;
-  width: 2.6rem;
-  height: 2.6rem;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--paper-raised);
   color: var(--ink);
   box-shadow: var(--shadow);
-  cursor: pointer;
-  font-size: 1rem;
-  display: grid;
-  place-items: center;
+  font-family: var(--font-ui);
 }
 
-.theme-toggle:focus-visible {
+.theme-toggle__option {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 0.45rem 0.7rem;
+  white-space: nowrap;
+}
+
+.theme-toggle__option:hover {
+  color: var(--ink);
+}
+
+.theme-toggle__option.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.theme-toggle__option:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 1px;
 }
 
 .sidebar-toggle {

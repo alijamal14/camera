@@ -1,44 +1,90 @@
 (function () {
   const key = 'camera-docs-theme';
+  const modes = ['system', 'dark', 'light'];
   const root = document.documentElement;
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
 
-  function preferred() {
+  function storedPreference() {
     const saved = localStorage.getItem(key);
-    if (saved === 'light' || saved === 'dark') return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (saved === 'light' || saved === 'dark' || saved === 'system') return saved;
+    return 'system';
   }
 
-  function apply(theme) {
+  function resolvedTheme(preference) {
+    if (preference === 'dark' || preference === 'light') return preference;
+    return mq.matches ? 'dark' : 'light';
+  }
+
+  function apply(preference) {
+    const pref = modes.includes(preference) ? preference : 'system';
+    const theme = resolvedTheme(pref);
     root.dataset.theme = theme;
-    const btn = document.getElementById('theme-toggle');
-    if (btn) {
-      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-      btn.innerHTML = theme === 'dark'
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>';
-    }
-  }
+    root.dataset.themePreference = pref;
 
-  function ensureButton() {
-    if (document.getElementById('theme-toggle')) return;
-    const btn = document.createElement('button');
-    btn.id = 'theme-toggle';
-    btn.className = 'theme-toggle';
-    btn.type = 'button';
-    btn.addEventListener('click', () => {
-      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem(key, next);
-      apply(next);
+    const group = document.getElementById('theme-toggle');
+    if (!group) return;
+
+    group.setAttribute('aria-label', 'Color theme');
+    group.querySelectorAll('[data-theme-mode]').forEach((btn) => {
+      const active = btn.dataset.themeMode === pref;
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      btn.classList.toggle('is-active', active);
     });
-    document.body.appendChild(btn);
-    apply(preferred());
   }
 
-  apply(preferred());
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ensureButton);
-  } else {
-    ensureButton();
+  function setPreference(preference) {
+    localStorage.setItem(key, preference);
+    apply(preference);
   }
-  window.addEventListener('hashchange', ensureButton);
+
+  function ensureControl() {
+    if (document.getElementById('theme-toggle')) {
+      apply(storedPreference());
+      return;
+    }
+
+    const group = document.createElement('div');
+    group.id = 'theme-toggle';
+    group.className = 'theme-toggle';
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-label', 'Color theme');
+
+    const labels = {
+      system: 'System',
+      dark: 'Dark',
+      light: 'Light',
+    };
+
+    modes.forEach((mode) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-toggle__option';
+      btn.dataset.themeMode = mode;
+      btn.textContent = labels[mode];
+      btn.setAttribute('aria-label', labels[mode] + ' theme');
+      btn.addEventListener('click', () => setPreference(mode));
+      group.appendChild(btn);
+    });
+
+    document.body.appendChild(group);
+    apply(storedPreference());
+  }
+
+  function onSystemChange() {
+    if (storedPreference() === 'system') apply('system');
+  }
+
+  if (typeof mq.addEventListener === 'function') {
+    mq.addEventListener('change', onSystemChange);
+  } else if (typeof mq.addListener === 'function') {
+    mq.addListener(onSystemChange);
+  }
+
+  apply(storedPreference());
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureControl);
+  } else {
+    ensureControl();
+  }
+  window.addEventListener('hashchange', ensureControl);
 })();
