@@ -29,4 +29,4 @@ For each image:
 
 Report per image: pass / advisory issues / hard failures, with the fix (lighting, distance,
 pose) or the code area to change (`src/browser/compositor.js` threshold, `src/geometry.js`
-framing, `src/browser/encoder.js` quality floor). Do not call any result NADRA-compliant.
+framing, `src/browser/encoder.js` quality floor). Do not claim official identity-authority compliance.

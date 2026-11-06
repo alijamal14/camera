@@ -74,7 +74,7 @@ export class MockProvider {
       accepted: false,
       mock: true,
       status: 'PENDING_SERVER_VERIFICATION',
-      reason: 'Mock provider cannot verify PAD provenance, source correspondence or NADRA acceptance.',
+      reason: 'Mock provider cannot verify PAD provenance, source correspondence or authority acceptance.',
     };
   }
 

@@ -28,15 +28,30 @@ export function defaultTelemetryDir(env = process.env) {
   return join(base, 'camera-telemetry');
 }
 
+/** Expand `%LOCALAPPDATA%` / `${LOCALAPPDATA}` so launch configs need no username. */
+export function expandStoreDir(dir, env = process.env) {
+  if (!dir) return dir;
+  const local = env.LOCALAPPDATA ?? join(homedir(), '.local', 'share');
+  const home = env.HOME ?? env.USERPROFILE ?? homedir();
+  return String(dir)
+    .replace(/%LOCALAPPDATA%/gi, local)
+    .replace(/\$\{LOCALAPPDATA\}/g, local)
+    .replace(/%HOME%/gi, home)
+    .replace(/\$\{HOME\}/g, home)
+    .replace(/%USERPROFILE%/gi, home)
+    .replace(/\$\{USERPROFILE\}/g, home);
+}
+
 const isInside = (child, parent) => {
   const rel = relative(parent, child);
   return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
 };
 
 // Refuses any directory where creating or purging telemetry could touch unrelated data.
-export async function validateStoreDir(dir, { servedRoot, create = true } = {}) {
-  if (!dir || !isAbsolute(dir)) throw new Error(`TELEMETRY_DIR must be an absolute path: ${dir}`);
-  const target = resolve(dir);
+export async function validateStoreDir(dir, { servedRoot, create = true, env = process.env } = {}) {
+  const expanded = expandStoreDir(dir, env);
+  if (!expanded || !isAbsolute(expanded)) throw new Error(`TELEMETRY_DIR must be an absolute path: ${dir}`);
+  const target = resolve(expanded);
   if (parse(target).root === target) throw new Error(`TELEMETRY_DIR cannot be a drive or filesystem root: ${target}`);
   if (resolve(homedir()) === target) throw new Error('TELEMETRY_DIR cannot be the home directory.');
   if (servedRoot && (isInside(target, servedRoot) || isInside(servedRoot, target))) {

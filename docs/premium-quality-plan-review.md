@@ -17,7 +17,7 @@ review and implementation specification; it does not claim the changes are imple
 | `e91dc26e-607c-4eb8-951a-bcd11e73d5f0.jpg` | 480x640 | 29,413 | Format checks pass; stair-stepped right hair boundary, retained chair at shoulder, upward/sideways gaze, uneven lighting |
 
 These are visual advisory findings, not calibrated biometric measurements or a
-NADRA-compliance determination. The screenshot reports a 351x468 crop expanded
+official identity-authority compliance determination. The screenshot reports a 351x468 crop expanded
 1.37x. Neither original raw RGB nor alpha is supplied: the contribution of camera
 softness, segmentation, resizing and JPEG compression cannot be isolated from these
 outputs alone. Do not describe inferred causes as measured results.
@@ -48,7 +48,7 @@ outputs alone. Do not describe inferred causes as measured results.
    does not guarantee a sufficiently detailed portrait crop. Keep upscale advisory
    until an explicit validated product profile enables enforcement.
 5. **ORT teardown is asynchronous.** `ResourceScope` calls synchronous `.close()`;
-   `NadraPhotoCapture` teardown does not await asynchronous resource releasers.
+   `IdentityPhotoCapture` teardown does not await asynchronous resource releasers.
    ORT uses `await session.release()`. Add a separate awaited teardown path owned by
    `LifecycleController`, dispose tensors/GPU textures explicitly, and test disposal
    during inference, partial initialization, rejection and cleanup failure. Do not
@@ -320,7 +320,7 @@ revised plan is not implementation evidence.
 
 - **LifecycleController already awaits teardown.** Its `#performTeardown()` uses
   `await this.#teardown()`. The required change is the synchronous teardown callback
-  in `NadraPhotoCapture` and the resource release API/adapters. Preserve the existing
+  in `IdentityPhotoCapture` and the resource release API/adapters. Preserve the existing
   controller contract rather than rewriting its drain machinery unnecessarily.
   Attempt every release, including after an earlier asynchronous rejection.
 - **Parallel captures need a policy.** The scheduler serializes VIDEO inference,

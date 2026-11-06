@@ -1,7 +1,7 @@
-// TC-11 (resource release on every path) and TC-10 (face count) on NadraPhotoCapture.
+// TC-11 (resource release on every path) and TC-10 (face count) on IdentityPhotoCapture.
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, test } from 'node:test';
-import { NadraPhotoCapture } from '../src/capture.js';
+import { IdentityPhotoCapture } from '../src/capture.js';
 import { BiometricAuditError, CaptureRejectedError, FaceCountError, PadRejectedError } from '../src/errors.js';
 import { InstanceDisposedError } from '../src/lifecycle.js';
 import {
@@ -42,7 +42,7 @@ async function setup({
   const { provider, session } = await createProviderSession({ serverFaces });
   Object.assign(provider, providerOverrides);
   let stoppedSources = 0;
-  const capture = new NadraPhotoCapture({
+  const capture = new IdentityPhotoCapture({
     engines,
     provider,
     grabFrame: grabFrame ?? (async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw')),
@@ -198,7 +198,7 @@ describe('diagnostics observer and single-capture policy', () => {
     const tracker = createTracker();
     const { engines } = createEngines(tracker);
     const { provider, session } = await createProviderSession();
-    const capture = new NadraPhotoCapture({
+    const capture = new IdentityPhotoCapture({
       engines,
       provider,
       grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),
@@ -226,7 +226,7 @@ describe('diagnostics observer and single-capture policy', () => {
     const tracker = createTracker();
     const { engines } = createEngines(tracker, { frameFaces: 2 });
     const { provider, session } = await createProviderSession();
-    const capture = new NadraPhotoCapture({
+    const capture = new IdentityPhotoCapture({
       engines,
       provider,
       grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),
@@ -243,7 +243,7 @@ describe('diagnostics observer and single-capture policy', () => {
     const tracker = createTracker();
     const { engines } = createEngines(tracker);
     const { provider, session } = await createProviderSession();
-    const capture = new NadraPhotoCapture({
+    const capture = new IdentityPhotoCapture({
       engines,
       provider,
       grabFrame: async () => tracker.bitmap(FRAME.width, FRAME.height, 'raw'),

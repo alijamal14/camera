@@ -1,11 +1,16 @@
 # Photo capture prototype
 
-Browser capture SDK and test harness for the consolidated plan at
-`C:\Users\ali\.gemini\antigravity-cli\brain\52d83028-6147-4872-8694-e09a8943af2b\live-background-removal-plan.md`.
+Browser capture SDK and test harness for 480×640 identity photos with live white-background
+preview, PAD-bound capture, and decoded-JPEG audit.
+
+**Not affiliated with, endorsed by, or connected to any government identity authority.** This is an
+independent prototype. Do not present outputs as officially compliant.
 
 Status: prototype. The provider is a labelled mock with no PAD evaluation; results are at most
-`ClientValidated`, never `ProviderAccepted`. NADRA's written approval of synthetic background
-editing remains a production gate.
+`ClientValidated`, never `ProviderAccepted`. Written approval from the target identity authority for
+synthetic background editing remains a production gate.
+
+Docs (GitHub Pages): https://alijamal14.github.io/camera/
 
 ## Run
 
@@ -39,7 +44,7 @@ npm run telemetry:purge
 | `src/lifecycle.js` | Operation tracking and the disposal contract (TC-08) |
 | `src/scheduler.js` | FIFO VIDEO-mode scheduler, droppable preview, monotonic timestamps (TC-03) |
 | `src/resources.js` | Ownership scope for bitmaps, masks and engines (TC-11) |
-| `src/capture.js` | `NadraPhotoCapture`: preview tick and PAD-bound capture transaction |
+| `src/capture.js` | `IdentityPhotoCapture`: preview tick and PAD-bound capture transaction |
 | `src/face-count.js` | Full-frame single-face gate (TC-10) |
 | `src/geometry.js` | Crop placement, mask mapping, framing measurements |
 | `src/audit.js` | Decoded-JPEG audit with HARD / ADVISORY / PENDING items |
@@ -55,3 +60,7 @@ npm run telemetry:purge
 `assets/manifest.json` ships with `sha256: null`. `npm run pin-assets` fetches each URL and records
 its hash; review the versions before committing. The server runtime and JPEG encoder stay unpinned
 until a backend is chosen, so `assertManifestReady(manifest, { production: true })` fails until then.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

@@ -13,3 +13,9 @@ graphify-out/
 # Telemetry is stored outside the repo; never commit a stray copy.
 telemetry/
 .camera-telemetry-store
+
+# Python matting environment, caches, and weight downloads (never commit)
+matting/.venv/
+matting/.models/
+__pycache__/
+.pytest_cache/

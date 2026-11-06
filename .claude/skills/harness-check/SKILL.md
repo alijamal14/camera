@@ -30,7 +30,7 @@ description: Smoke-test the capture harness in a browser - MediaPipe engines, co
    `Compositor` and `encodeJpegUnderCap`. Expect `image/jpeg`, <= 30,000 bytes, 480x640 decoded,
    and a pure white (255,255,255) corner after decoding.
 5. Console errors other than MediaPipe `INFO:` lines are failures.
-6. Telemetry path: in the page, build `NadraPhotoCapture` with synthetic engines, the real
+6. Telemetry path: in the page, build `IdentityPhotoCapture` with synthetic engines, the real
    `Compositor`/encoder, `createCaptureRecorder` (`/web/recorder.js`) and `TelemetryClient`
    (token from `meta[name=telemetry-token]`). Run off, diagnostic and basic captures. Expect: off sends
    no `/telemetry` requests; diagnostic stores 6 artifacts + log.json; basic stores preview, output,

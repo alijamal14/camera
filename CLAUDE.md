@@ -1,6 +1,6 @@
 # Photo capture prototype
 
-Browser SDK + harness for NADRA-style 480x640 identity photos with live background removal.
+Browser SDK + harness for 480x640 identity photos with live background removal.
 Read `docs/architecture.md` first. The authoritative plan lives outside the repo (path in that doc).
 
 ## Commands

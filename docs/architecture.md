@@ -1,8 +1,7 @@
 # Architecture
 
-Prototype of the capture SDK described in the consolidated plan
-(`C:\Users\ali\.gemini\antigravity-cli\brain\52d83028-6147-4872-8694-e09a8943af2b\live-background-removal-plan.md`).
-The plan is authoritative; this page maps it to code.
+Prototype of the capture SDK. The authoritative product plan lives outside this repository;
+this page maps that plan to code.
 
 ## Flow
 
@@ -37,7 +36,7 @@ The plan is authoritative; this page maps it to code.
 
 Plan: `docs/premium-quality-plan-review.md` (spec) and the approved phased plan. Phase 1 is built.
 
-- `NadraPhotoCapture` accepts `observe(event, payload)`. Events are emitted in stage order:
+- `IdentityPhotoCapture` accepts `observe(event, payload)`. Events are emitted in stage order:
   1. `frame`
   2. `segmented`
   3. `cropped`
@@ -78,6 +77,6 @@ Plan: `docs/premium-quality-plan-review.md` (spec) and the approved phased plan.
 
 ## Production gates
 
-Written NADRA approval of synthetic background editing; a real PAD provider with selected-frame
-provenance; server-side generation or verified fallback; pinned hashes and server runtime;
-calibrated thresholds; privacy and deletion configuration.
+Written approval from the target identity authority for synthetic background editing; a real PAD
+provider with selected-frame provenance; server-side generation or verified fallback; pinned hashes
+and server runtime; calibrated thresholds; privacy and deletion configuration.

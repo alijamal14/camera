@@ -13,7 +13,7 @@
       "runtimeArgs": [
         "scripts/serve.mjs",
         "--port=5181",
-        "--telemetry-dir=C:/Users/ali/AppData/Local/camera-telemetry-verify"
+        "--telemetry-dir=%LOCALAPPDATA%/camera-telemetry-verify"
       ],
       "port": 5181
     }

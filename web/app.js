@@ -2,7 +2,7 @@ import { assertManifestReady } from '../src/assets.js';
 import { Compositor } from '../src/browser/compositor.js';
 import { createEngines } from '../src/browser/engines.js';
 import { encodeJpegUnderCap } from '../src/browser/encoder.js';
-import { NadraPhotoCapture } from '../src/capture.js';
+import { IdentityPhotoCapture } from '../src/capture.js';
 import { BiometricAuditError, CaptureRejectedError } from '../src/errors.js';
 import { countFaces } from '../src/face-count.js';
 import { OUTPUT, computePortraitCrop, measureFace } from '../src/geometry.js';
@@ -90,7 +90,7 @@ async function start() {
       countFaces: (frame) => countFaces(engines.auditLandmarker.detect(frame)),
     });
 
-    capture = new NadraPhotoCapture({
+    capture = new IdentityPhotoCapture({
       engines,
       provider,
       grabFrame: () => createImageBitmap(video), // Unmirrored camera pixels.

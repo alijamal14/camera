@@ -7,7 +7,7 @@ import { ResourceScope } from './resources.js';
 import { InferenceScheduler } from './scheduler.js';
 
 const DEFAULT_POLICY = Object.freeze({
-  // Class B product policy, not a NADRA rule. Reported as advisory unless enforced.
+  // Class B product policy, not an external identity-authority rule. Reported as advisory unless enforced.
   maxUpscale: 1.0,
   enforceUpscale: false,
 });
@@ -24,7 +24,7 @@ const DEFAULT_POLICY = Object.freeze({
  * observe(event, payload)                optional synchronous diagnostics observer; resources in
  *                                        the payload are valid only during the call
  */
-export class NadraPhotoCapture {
+export class IdentityPhotoCapture {
   #engines;
   #provider;
   #grabFrame;
