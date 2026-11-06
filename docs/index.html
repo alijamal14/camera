@@ -31,9 +31,11 @@
         noData: 'No results',
         depth: 4,
       },
+      // Relative aliases: a leading "/_sidebar.md" would hit the domain root on
+      // https://ali.mk313.com/camera/ instead of this project.
       alias: {
-        '/.*/_sidebar.md': '/_sidebar.md',
-        '/.*/_navbar.md': '/_navbar.md',
+        '/.*/_sidebar.md': '_sidebar.md',
+        '/.*/_navbar.md': '_navbar.md',
       },
       pagination: {
         previousText: 'Previous',
