@@ -30,6 +30,14 @@ with the same shape) until a real server exists.
 
 Need the backend contract? See [Server / provider](/guide/server-provider).
 
+## Background removal
+
+Matting is **client-owned** in this prototype: VIDEO segmenter → person confidence mask →
+`Compositor` (default threshold `0.5`) → white 480×640 → JPEG ≤ 30 KB.
+
+Step-by-step diagrams, preview vs export, and matte pitfalls:
+[Background removal](/guide/background-removal).
+
 ## Requirements
 
 - Node.js 20+
@@ -146,7 +154,8 @@ Framing is **advisory** until calibrated.
 
 ## Next
 
-1. [How capture works](/guide/how-it-works) — pipeline narrative  
-2. [Server / provider](/guide/server-provider) — when you need real acceptance  
-3. [Harness check](/skills/harness-check) — smoke-test engines and encoder  
-4. [Privacy](/guide/privacy) — no biometric persistence in the product path  
+1. [Background removal](/guide/background-removal) — who mattes and how  
+2. [How capture works](/guide/how-it-works) — pipeline narrative  
+3. [Server / provider](/guide/server-provider) — when you need real acceptance  
+4. [Harness check](/skills/harness-check) — smoke-test engines and encoder  
+5. [Privacy](/guide/privacy) — no biometric persistence in the product path  

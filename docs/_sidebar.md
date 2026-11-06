@@ -1,13 +1,14 @@
 - [Home](/)
+- **Start here**
+  - [Quick start](/guide/quick-start)
+  - [How capture works](/guide/how-it-works)
+  - [Background removal](/guide/background-removal)
+  - [Privacy rules](/guide/privacy)
 - **Implement**
   - [Choose path](/guide/choose-path)
   - [Client-only](/guide/client-only)
   - [Server / provider](/guide/server-provider)
   - [Provider API](/guide/provider-api)
-- **Start here**
-  - [Quick start](/guide/quick-start)
-  - [How capture works](/guide/how-it-works)
-  - [Privacy rules](/guide/privacy)
 - **Reference**
   - [Architecture](/architecture)
   - [Quality plan notes](/premium-quality-plan-review)

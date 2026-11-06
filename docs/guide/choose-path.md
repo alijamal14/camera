@@ -26,11 +26,13 @@ Mixing the two is how teams ship a client that *looks* accepted while the server
     <p><a href="#/guide/server-provider">Implement the provider →</a></p>
   </div>
   <div class="card">
-    <h3>API cheat sheet</h3>
-    <p>Six provider methods, inputs, outputs, and error codes — for agents and backend authors.</p>
-    <p><a href="#/guide/provider-api">Provider API →</a></p>
+    <h3>Need white background?</h3>
+    <p>Person-on-white is client-owned (segmenter + compositor). Server approval is a separate gate.</p>
+    <p><a href="#/guide/background-removal">Background removal →</a></p>
   </div>
 </div>
+
+<p>Provider method tables: <a href="#/guide/provider-api">Provider API</a>.</p>
 
 <div class="callout callout-ok">
   <strong>Done when</strong>

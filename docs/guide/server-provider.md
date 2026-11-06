@@ -31,6 +31,14 @@ evidence frame, an independent face count, and accept / reject.
 | Send selected frame + candidate JPEG | PAD on that exact frame; bind `frameId` to the candidate |
 | Show `ClientValidated` | Decide `accepted` only after server verification |
 
+<div class="callout callout-note">
+  <strong>Matte is client-side</strong>
+  Person-on-white compositing happens in the browser
+  (<a href="#/guide/background-removal">Background removal</a>). Your production gate for synthetic
+  backgrounds is <em>approval and acceptance policy</em>, not a server matte tutorial — unless you
+  deliberately replace <code>compose</code> or add a server re-matte later.
+</div>
+
 ## Session state machine
 
 The mock enforces this sequence. Your server should match it (names can differ; behaviour must not).

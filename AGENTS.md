@@ -6,8 +6,9 @@ Browser SDK + harness for 480x640 identity photos with live background removal.
 Start implementers at [Choose path](https://ali.mk313.com/camera/#/guide/choose-path) —
 [client-only](https://ali.mk313.com/camera/#/guide/client-only) vs
 [server/provider](https://ali.mk313.com/camera/#/guide/server-provider).  
-In-repo: `docs/guide/`, `docs/architecture.md`. The authoritative product plan lives outside this
-repository.
+White background / matte: [Background removal](https://ali.mk313.com/camera/#/guide/background-removal)
+(client-owned). In-repo: `docs/guide/`, `docs/architecture.md`. The authoritative product plan lives
+outside this repository.
 
 ## Commands
 

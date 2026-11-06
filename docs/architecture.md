@@ -9,6 +9,8 @@ this page maps that plan to code.
 
 ## Flow
 
+Person-on-white matting is client-owned — see [Background removal](/guide/background-removal).
+
 1. Preview: `previewTick(video)` runs VIDEO-mode segmentation and landmarks through the scheduler.
    The display is mirrored; nothing else is.
 2. Capture: `capture(session)` during an active provider challenge:

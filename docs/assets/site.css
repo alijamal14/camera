@@ -522,6 +522,29 @@ html[data-theme="dark"] .btn-primary { color: #041018 !important; }
 
 html[data-theme="dark"] .steps li::before { color: #041018; }
 
+/* Mermaid diagrams (Docsify + mermaid@10) */
+.markdown-section .mermaid {
+  display: block;
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.markdown-section .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+html[data-theme="dark"] .markdown-section .mermaid {
+  background: color-mix(in srgb, var(--paper-raised) 92%, var(--accent-soft));
+}
+
 /* Theme control: System / Dark / Light */
 .theme-toggle {
   position: fixed;

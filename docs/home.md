@@ -11,6 +11,7 @@ verify it on a real server. Two jobs, two finish lines — do not mix them up.
   <a class="btn btn-primary" href="#/guide/choose-path">Choose your path</a>
   <a class="btn btn-ghost" href="#/guide/quick-start">Quick start</a>
   <a class="btn btn-ghost" href="#/guide/how-it-works">How it works</a>
+  <a class="btn btn-ghost" href="#/guide/background-removal">Background removal</a>
 </div>
 
 </div>
@@ -63,6 +64,7 @@ Only a real provider that sets `accepted: true` can reach `ProviderAccepted`. Th
 | Need | Page |
 | :--- | :--- |
 | Pick client vs server | [Choose path](/guide/choose-path) |
+| Need white background? | [Background removal](/guide/background-removal) |
 | Wire the browser SDK | [Client-only](/guide/client-only) |
 | Build the real provider | [Server / provider](/guide/server-provider) |
 | Provider method tables | [Provider API](/guide/provider-api) |

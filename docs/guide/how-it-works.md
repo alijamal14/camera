@@ -15,6 +15,25 @@ A plain-language map of the pipeline. For module-level detail, see [Architecture
 
 Only the DOM preview is mirrored. Export, PAD evidence, and coordinates stay unmirrored.
 
+```mermaid
+flowchart TB
+  subgraph Preview
+    P1[Video frames] --> P2[VIDEO segment + landmarks]
+    P2 --> P3[Mirrored DOM paint]
+  end
+  subgraph Capture
+    C1[Unmirrored grabFrame] --> C2[Face count + segment]
+    C2 --> C3[PAD evidence]
+    C3 --> C4[Crop 480x640]
+    C4 --> C5[Composite on white]
+    C5 --> C6[JPEG + IMAGE audit]
+    C6 --> C7[Provider submit]
+  end
+```
+
+Background removal detail (who mattes, threshold, pitfalls):
+[Background removal](/guide/background-removal).
+
 ## Capture transaction
 
 During an active provider challenge, `IdentityPhotoCapture.capture(session)` does this:
@@ -53,6 +72,7 @@ A `finally` block releases the raw frame, segmentation result, and decoded bitma
 
 ## Next
 
+- [Background removal](/guide/background-removal) — client matte
 - [Choose path](/guide/choose-path) — client vs server
 - [Client-only](/guide/client-only) / [Server / provider](/guide/server-provider)
 - [Privacy rules](/guide/privacy)

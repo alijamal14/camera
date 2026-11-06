@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <link rel="stylesheet" href="assets/site.css?v=c1aa436">
+  <link rel="stylesheet" href="assets/site.css?v=bg-mermaid1">
   <script>
     // Apply stored theme before paint; full control mounts in assets/theme.js.
     (function () {
@@ -60,6 +60,9 @@
         errorText: 'Error',
         successText: 'Copied',
       },
+      mermaidConfig: {
+        querySelector: '.mermaid',
+      },
       plugins: [
         function (hook) {
           hook.doneEach(function () {
@@ -75,6 +78,58 @@
   <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
-  <script src="assets/theme.js?v=c1aa436" data-cfasync="false"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    function mermaidTheme() {
+      return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'neutral';
+    }
+
+    function initMermaid() {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: mermaidTheme(),
+        securityLevel: 'loose',
+      });
+    }
+
+    const run = mermaid.run.bind(mermaid);
+    mermaid.run = async function (conf) {
+      const selector = (conf && conf.querySelector) || '.mermaid';
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (!el.dataset.mermaidSrc && !el.querySelector('svg')) {
+          el.dataset.mermaidSrc = el.textContent.trim();
+        }
+      });
+      return run(conf);
+    };
+
+    initMermaid();
+    window.mermaid = mermaid;
+
+    async function rethemeMermaid() {
+      initMermaid();
+      const nodes = Array.from(document.querySelectorAll('.mermaid'));
+      if (!nodes.length) return;
+      for (const el of nodes) {
+        if (!el.dataset.mermaidSrc) continue;
+        el.removeAttribute('data-processed');
+        el.removeAttribute('data-mermaid-id');
+        el.textContent = el.dataset.mermaidSrc;
+      }
+      await mermaid.run({ nodes: nodes.filter(function (el) { return el.dataset.mermaidSrc; }) });
+    }
+
+    new MutationObserver(function (mutations) {
+      for (const m of mutations) {
+        if (m.attributeName === 'data-theme') {
+          rethemeMermaid();
+          break;
+        }
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
+  <script src="assets/theme.js?v=bg-mermaid1" data-cfasync="false"></script>
 </body>
 </html>
