@@ -2,6 +2,10 @@
 
 A plain-language map of the pipeline. For module-level detail, see [Architecture](../architecture.md).
 
+**Implementing?** The browser and the provider are separate jobs:
+[Client-only](client-only.md) vs [Server / provider](server-provider.md)
+([choose path](choose-path.md)).
+
 ## Two modes
 
 | Mode | Purpose | Mirroring |
@@ -49,6 +53,8 @@ A `finally` block releases the raw frame, segmentation result, and decoded bitma
 
 ## Next
 
+- [Choose path](choose-path.md) — client vs server
+- [Client-only](client-only.md) / [Server / provider](server-provider.md)
 - [Privacy rules](privacy.md)
 - [Architecture](../architecture.md)
 - [Capture review skill](../skills/capture-review.md)

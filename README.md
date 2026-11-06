@@ -10,7 +10,10 @@ Status: prototype. The provider is a labelled mock with no PAD evaluation; resul
 `ClientValidated`, never `ProviderAccepted`. Written approval from the target identity authority for
 synthetic background editing remains a production gate.
 
-Docs: [ali.mk313.com/camera](https://ali.mk313.com/camera/) (Docsify site with search, sidebar, and agent skills)
+Docs: [ali.mk313.com/camera](https://ali.mk313.com/camera/)
+
+- **Client-only:** [Implement the browser SDK](https://ali.mk313.com/camera/#/guide/client-only) (`ClientValidated`)
+- **Server / provider:** [Implement the backend contract](https://ali.mk313.com/camera/#/guide/server-provider) (`ProviderAccepted`)
 
 ## Run
 

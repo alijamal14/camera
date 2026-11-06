@@ -4,14 +4,14 @@
 
 <p class="lede">
 Browser SDK and harness for <strong>480×640</strong> identity photos: live white-background preview,
-PAD-bound capture, and a decoded-JPEG audit. Built so agents and humans can implement the pipeline
-without guessing.
+PAD-bound capture, and a decoded-JPEG audit. Implement the <strong>client</strong> and the
+<strong>server / provider</strong> as separate jobs — they are not the same finish line.
 </p>
 
 <div class="hero-actions">
-  <a class="btn btn-primary" href="#/guide/quick-start">Quick start</a>
-  <a class="btn btn-ghost" href="#/guide/how-it-works">How it works</a>
-  <a class="btn btn-ghost" href="https://github.com/alijamal14/camera">GitHub</a>
+  <a class="btn btn-primary" href="#/guide/client-only">Client-only</a>
+  <a class="btn btn-ghost" href="#/guide/server-provider">Server / provider</a>
+  <a class="btn btn-ghost" href="#/guide/choose-path">Choose path</a>
 </div>
 
 </div>
@@ -24,40 +24,44 @@ without guessing.
 
 <div class="grid-3">
   <div class="card">
-    <h3>Preview</h3>
-    <p>Mirrored live view with background removal for guidance. Export and evidence stay unmirrored.</p>
+    <h3>Client</h3>
+    <p>Camera, mirrored preview, crop, white JPEG ≤ 30 KB, decoded audit. Ceiling: <code>ClientValidated</code>.</p>
+    <p><a href="#/guide/client-only">Guide →</a></p>
   </div>
   <div class="card">
-    <h3>Capture</h3>
-    <p>One frame, one face, PAD binding, 480×640 white composite, JPEG under 30 KB, then audit.</p>
+    <h3>Server</h3>
+    <p>Session, PAD, selected-frame binding, independent face count, accept/reject. Only path to <code>ProviderAccepted</code>.</p>
+    <p><a href="#/guide/server-provider">Guide →</a></p>
   </div>
   <div class="card">
-    <h3>Review</h3>
-    <p>Optional local telemetry bundles for developers. Never persisted as product biometric storage.</p>
+    <h3>Harness</h3>
+    <p><code>npm test</code> then <code>npm run serve</code> → <code>http://localhost:5173/web/</code></p>
+    <p><a href="#/guide/quick-start">Quick start →</a></p>
   </div>
 </div>
 
 ## Start in three steps
 
 <ol class="steps">
-  <li><code>npm test</code> — unit suite must pass.</li>
-  <li><code>npm run serve</code> — open <code>http://localhost:5173/web/</code> (camera needs localhost or HTTPS).</li>
-  <li>Read <a href="#/guide/how-it-works">How capture works</a>, then use the agent skills when iterating.</li>
+  <li><a href="#/guide/choose-path">Choose path</a> — client-only or server/provider.</li>
+  <li><code>npm test</code> then <code>npm run serve</code> (camera needs localhost or HTTPS).</li>
+  <li>Follow the matching guide; use agent skills when iterating.</li>
 </ol>
 
 ## Where to go next
 
 | Need | Page |
 | :--- | :--- |
-| Run the harness safely | [Quick start](guide/quick-start.md) |
-| Understand the pipeline | [How it works](guide/how-it-works.md) |
+| Pick client vs server | [Choose path](guide/choose-path.md) |
+| Wire the browser SDK | [Client-only](guide/client-only.md) |
+| Build the real provider | [Server / provider](guide/server-provider.md) |
+| Provider method tables | [Provider API](guide/provider-api.md) |
+| Pipeline in plain language | [How it works](guide/how-it-works.md) |
 | Module map & gates | [Architecture](architecture.md) |
-| Smoke-test in a browser | [Harness check skill](skills/harness-check.md) |
-| Judge a JPEG | [Capture review skill](skills/capture-review.md) |
-| Biometric / telemetry rules | [Privacy](guide/privacy.md) |
+| Smoke-test / review skills | [Harness check](skills/harness-check.md), [Capture review](skills/capture-review.md) |
 
 ## Status
 
-Prototype. The provider is a labelled mock with no PAD evaluation. Results are at most
+Prototype. The included provider is a labelled mock with no PAD evaluation. Results are at most
 `ClientValidated`, never `ProviderAccepted`. Written approval from the target identity authority
 for synthetic background editing remains a production gate.

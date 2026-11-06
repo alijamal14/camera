@@ -1,4 +1,9 @@
 - [Home](/)
+- **Implement**
+  - [Choose path](guide/choose-path.md)
+  - [Client-only](guide/client-only.md)
+  - [Server / provider](guide/server-provider.md)
+  - [Provider API](guide/provider-api.md)
 - **Start here**
   - [Quick start](guide/quick-start.md)
   - [How capture works](guide/how-it-works.md)
