@@ -12,5 +12,6 @@
   - [Architecture](architecture.md)
   - [Quality plan notes](premium-quality-plan-review.md)
 - **Agent skills**
+  - [Implement path](skills/implement-path.md)
   - [Harness check](skills/harness-check.md)
   - [Capture review](skills/capture-review.md)

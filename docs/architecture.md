@@ -4,6 +4,8 @@ Prototype of the capture SDK. The authoritative product plan lives outside this 
 this page maps that plan to code.
 
 > Prefer [How capture works](guide/how-it-works.md) first if you want the pipeline in plain language.
+> Implementing? [Choose path](guide/choose-path.md) — [client-only](guide/client-only.md) vs
+> [server/provider](guide/server-provider.md).
 
 ## Flow
 

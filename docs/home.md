@@ -58,7 +58,7 @@ PAD-bound capture, and a decoded-JPEG audit. Implement the <strong>client</stron
 | Provider method tables | [Provider API](guide/provider-api.md) |
 | Pipeline in plain language | [How it works](guide/how-it-works.md) |
 | Module map & gates | [Architecture](architecture.md) |
-| Smoke-test / review skills | [Harness check](skills/harness-check.md), [Capture review](skills/capture-review.md) |
+| Smoke-test / review / route skills | [Implement path](skills/implement-path.md), [Harness check](skills/harness-check.md), [Capture review](skills/capture-review.md) |
 
 ## Status
 

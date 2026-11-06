@@ -36,3 +36,5 @@ description: Smoke-test the capture harness in a browser - MediaPipe engines, co
    no `/telemetry` requests; diagnostic stores 6 artifacts + log.json; basic stores preview, output,
    log; `GET /telemetry/...` returns 403; logs contain no injected device ids.
 7. Stop the server when done.
+8. For integration work (not smoke tests), use [implement-path](implement-path.md) so client vs
+   server ceilings stay separate (`ClientValidated` vs `ProviderAccepted`).
