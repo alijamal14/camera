@@ -37,8 +37,16 @@
     apply(preference);
   }
 
+  function isSegmentedControl(el) {
+    return Boolean(el && el.querySelector('[data-theme-mode]'));
+  }
+
   function ensureControl() {
-    if (document.getElementById('theme-toggle')) {
+    const existing = document.getElementById('theme-toggle');
+    if (existing && !isSegmentedControl(existing)) {
+      // Drop the legacy single sun/moon button so System/Dark/Light can mount.
+      existing.remove();
+    } else if (isSegmentedControl(existing)) {
       apply(storedPreference());
       return;
     }

@@ -9,7 +9,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/site.css?v=2">
+  <script>
+    // Apply stored theme before paint; full control mounts in assets/theme.js.
+    (function () {
+      var key = 'camera-docs-theme';
+      var saved = localStorage.getItem(key);
+      var pref = (saved === 'light' || saved === 'dark' || saved === 'system') ? saved : 'system';
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = pref === 'system' ? (dark ? 'dark' : 'light') : pref;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themePreference = pref;
+    })();
+  </script>
 </head>
 <body>
   <div id="app">Loading docs…</div>
@@ -63,6 +75,6 @@
   <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
-  <script src="assets/theme.js"></script>
+  <script src="assets/theme.js?v=2" data-cfasync="false"></script>
 </body>
 </html>
