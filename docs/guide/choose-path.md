@@ -58,12 +58,12 @@ Mixing the two is how teams ship a client that *looks* accepted while the server
 
 Written approval for synthetic background editing, a real PAD provider with selected-frame
 provenance, pinned asset hashes and server runtime, calibrated thresholds, privacy and deletion
-configuration. See [Architecture — production gates](../architecture.md#production-gates).
+configuration. See [Architecture — production gates](/architecture#production-gates).
 
 </details>
 
 ## Next
 
-1. [Client-only](client-only.md) **or** [Server / provider](server-provider.md)  
-2. [Quick start](quick-start.md) — run the harness  
-3. [Provider API](provider-api.md) — method tables when wiring both sides  
+1. [Client-only](/guide/client-only) **or** [Server / provider](/guide/server-provider)  
+2. [Quick start](/guide/quick-start) — run the harness  
+3. [Provider API](/guide/provider-api) — method tables when wiring both sides  

@@ -123,5 +123,5 @@ Preview ticks do not call the provider. Only `capture(session)` during an active
 
 ## Next
 
-1. [Server / provider guide](server-provider.md) — implement the contract  
-2. [Client-only guide](client-only.md) — how the browser calls you  
+1. [Server / provider guide](/guide/server-provider) — implement the contract  
+2. [Client-only guide](/guide/client-only) — how the browser calls you  

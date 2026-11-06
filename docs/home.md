@@ -25,8 +25,8 @@ verify it on a real server. Two jobs, two finish lines — do not mix them up.
 
 | Path | You build | Ceiling | Start here |
 | :--- | :--- | :--- | :--- |
-| **Client-only** | Camera, preview, crop, white JPEG, client audit | `ClientValidated` | [Client-only guide](guide/client-only.md) |
-| **Server / provider** | Session, PAD, frame binding, face count, accept/reject | `ProviderAccepted` | [Server / provider guide](guide/server-provider.md) |
+| **Client-only** | Camera, preview, crop, white JPEG, client audit | `ClientValidated` | [Client-only guide](/guide/client-only) |
+| **Server / provider** | Session, PAD, frame binding, face count, accept/reject | `ProviderAccepted` | [Server / provider guide](/guide/server-provider) |
 
 Only a real provider that sets `accepted: true` can reach `ProviderAccepted`. The included mock never does.
 
@@ -62,13 +62,13 @@ Only a real provider that sets `accepted: true` can reach `ProviderAccepted`. Th
 
 | Need | Page |
 | :--- | :--- |
-| Pick client vs server | [Choose path](guide/choose-path.md) |
-| Wire the browser SDK | [Client-only](guide/client-only.md) |
-| Build the real provider | [Server / provider](guide/server-provider.md) |
-| Provider method tables | [Provider API](guide/provider-api.md) |
-| Pipeline in plain language | [How it works](guide/how-it-works.md) |
-| Module map & gates | [Architecture](architecture.md) |
-| Smoke-test / review / route skills | [Implement path](skills/implement-path.md), [Harness check](skills/harness-check.md), [Capture review](skills/capture-review.md) |
+| Pick client vs server | [Choose path](/guide/choose-path) |
+| Wire the browser SDK | [Client-only](/guide/client-only) |
+| Build the real provider | [Server / provider](/guide/server-provider) |
+| Provider method tables | [Provider API](/guide/provider-api) |
+| Pipeline in plain language | [How it works](/guide/how-it-works) |
+| Module map & gates | [Architecture](/architecture) |
+| Smoke-test / review / route skills | [Implement path](/skills/implement-path), [Harness check](/skills/harness-check), [Capture review](/skills/capture-review) |
 
 ## Status
 

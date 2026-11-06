@@ -71,8 +71,8 @@ server runtime.
 
 | Goal | Page |
 | :--- | :--- |
-| Pick client vs server | [Choose path](choose-path.md) |
-| Wire the browser SDK | [Client-only](client-only.md) |
-| Build a real provider | [Server / provider](server-provider.md) |
-| Pipeline narrative | [How capture works](how-it-works.md) |
-| Smoke-test engines | [Harness check](../skills/harness-check.md) |
+| Pick client vs server | [Choose path](/guide/choose-path) |
+| Wire the browser SDK | [Client-only](/guide/client-only) |
+| Build a real provider | [Server / provider](/guide/server-provider) |
+| Pipeline narrative | [How capture works](/guide/how-it-works) |
+| Smoke-test engines | [Harness check](/skills/harness-check) |

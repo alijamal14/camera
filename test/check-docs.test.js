@@ -8,7 +8,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const script = join(root, 'scripts', 'check-docs.mjs');
 
 describe('docs integrity', () => {
-  test('sidebar pages exist and internal .md / hash links resolve', () => {
+  test('Docsify absolute routes resolve and relative .md body links are rejected', () => {
     const result = spawnSync(process.execPath, [script], {
       cwd: root,
       encoding: 'utf8',
@@ -17,3 +17,4 @@ describe('docs integrity', () => {
     assert.match(result.stdout, /docs check ok/);
   });
 });
+

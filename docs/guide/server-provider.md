@@ -21,7 +21,7 @@ evidence frame, an independent face count, and accept / reject.
 | **You own** | Session, PAD, selected-frame binding, independent face count, accept / reject |
 | **You do not own** | DOM preview, MediaPipe VIDEO loop |
 | **Ceiling** | `ProviderAccepted` (only when your server sets `accepted: true`) |
-| **Contract** | [Provider API](provider-api.md) |
+| **Contract** | [Provider API](/guide/provider-api) |
 
 ## Trust boundary
 
@@ -103,7 +103,7 @@ to both sides.
 <details>
 <summary>Production gates beyond the API (click to expand)</summary>
 
-From [Architecture — production gates](../architecture.md#production-gates):
+From [Architecture — production gates](/architecture#production-gates):
 
 - Written approval for synthetic background editing  
 - Real PAD with selected-frame provenance  
@@ -125,6 +125,6 @@ From [Architecture — production gates](../architecture.md#production-gates):
 
 ## Next
 
-1. [Provider API](provider-api.md) — method reference  
-2. [Client-only](client-only.md) — how the browser calls you  
-3. [Privacy](privacy.md) — biometric retention rules  
+1. [Provider API](/guide/provider-api) — method reference  
+2. [Client-only](/guide/client-only) — how the browser calls you  
+3. [Privacy](/guide/privacy) — biometric retention rules  

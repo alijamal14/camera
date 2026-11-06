@@ -28,7 +28,7 @@ with the same shape) until a real server exists.
 - Not production `assertManifestReady(manifest, { production: true })` until hashes and server
   runtime are pinned
 
-Need the backend contract? See [Server / provider](server-provider.md).
+Need the backend contract? See [Server / provider](/guide/server-provider).
 
 ## Requirements
 
@@ -69,7 +69,7 @@ Open [http://localhost:5173/web/](http://localhost:5173/web/).
 | `grabFrame()` | Returns a **new unmirrored** `ImageBitmap` owned by the capture |
 | `compose({ rawFrame, segmentation, crop })` | Returns a JPEG `Blob` (white background, ≤ 30 KB) |
 | `decode(blob)` | Returns a closable decoded bitmap for audit |
-| `provider` | Adapter implementing the [provider API](provider-api.md) |
+| `provider` | Adapter implementing the [provider API](/guide/provider-api) |
 | `observe(event, payload)` | Optional; synchronous; must never fail the capture |
 
 Sketch (abbreviated from the harness):
@@ -146,7 +146,7 @@ Framing is **advisory** until calibrated.
 
 ## Next
 
-1. [How capture works](how-it-works.md) — pipeline narrative  
-2. [Server / provider](server-provider.md) — when you need real acceptance  
-3. [Harness check](../skills/harness-check.md) — smoke-test engines and encoder  
-4. [Privacy](privacy.md) — no biometric persistence in the product path  
+1. [How capture works](/guide/how-it-works) — pipeline narrative  
+2. [Server / provider](/guide/server-provider) — when you need real acceptance  
+3. [Harness check](/skills/harness-check) — smoke-test engines and encoder  
+4. [Privacy](/guide/privacy) — no biometric persistence in the product path  

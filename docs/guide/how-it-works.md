@@ -1,10 +1,10 @@
 # How capture works
 
-A plain-language map of the pipeline. For module-level detail, see [Architecture](../architecture.md).
+A plain-language map of the pipeline. For module-level detail, see [Architecture](/architecture).
 
 **Implementing?** The browser and the provider are separate jobs:
-[Client-only](client-only.md) vs [Server / provider](server-provider.md)
-([choose path](choose-path.md)).
+[Client-only](/guide/client-only) vs [Server / provider](/guide/server-provider)
+([choose path](/guide/choose-path)).
 
 ## Two modes
 
@@ -53,8 +53,8 @@ A `finally` block releases the raw frame, segmentation result, and decoded bitma
 
 ## Next
 
-- [Choose path](choose-path.md) — client vs server
-- [Client-only](client-only.md) / [Server / provider](server-provider.md)
-- [Privacy rules](privacy.md)
-- [Architecture](../architecture.md)
-- [Capture review skill](../skills/capture-review.md)
+- [Choose path](/guide/choose-path) — client vs server
+- [Client-only](/guide/client-only) / [Server / provider](/guide/server-provider)
+- [Privacy rules](/guide/privacy)
+- [Architecture](/architecture)
+- [Capture review skill](/skills/capture-review)
