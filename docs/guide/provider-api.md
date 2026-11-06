@@ -1,9 +1,26 @@
 # Provider API
 
-Contract the client (`IdentityPhotoCapture`) expects. Behaviour reference:
+Methods the client (`IdentityPhotoCapture`) expects. Behaviour reference:
 [`src/mock-provider.js`](https://github.com/alijamal14/camera/blob/main/src/mock-provider.js).
 
-Error type used by the mock: `ProviderError` with a `code` string.
+Errors use `ProviderError` with a `code` string.
+
+<div class="callout callout-ok">
+  <strong>Done when</strong>
+  You can implement each method below with the listed inputs, outputs, and error codes —
+  and the mock’s state machine still holds on your server.
+</div>
+
+## Method map
+
+| Method | Expected state | Success outcome |
+| :--- | :--- | :--- |
+| `initSession()` | — | Session `{ id, nonce, expiresAt }` |
+| `startChallenge(session)` | `initialized` | Session → `challenge` |
+| `recordChallengeFrame(session, frame, opts)` | `challenge` | `frameId` string |
+| `finishChallenge(session, selectedFrameId)` | `challenge` | `{ passed }` → `evaluated` |
+| `generateOrVerifyPhoto(session, payload)` | `evaluated` | `{ accepted }` → `consumed` |
+| `cancelSession(session)` | any | Drop state |
 
 ## Methods
 
@@ -104,7 +121,7 @@ initSession
 
 Preview ticks do not call the provider. Only `capture(session)` during an active challenge does.
 
-## Related
+## Next
 
-- [Server / provider guide](server-provider.md)  
-- [Client-only guide](client-only.md)  
+1. [Server / provider guide](server-provider.md) — implement the contract  
+2. [Client-only guide](client-only.md) — how the browser calls you  

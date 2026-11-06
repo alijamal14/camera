@@ -3,15 +3,14 @@
 # Identity photo capture
 
 <p class="lede">
-Browser SDK and harness for <strong>480×640</strong> identity photos: live white-background preview,
-PAD-bound capture, and a decoded-JPEG audit. Implement the <strong>client</strong> and the
-<strong>server / provider</strong> as separate jobs — they are not the same finish line.
+Capture a <strong>480×640</strong> white-background identity JPEG in the browser, then optionally
+verify it on a real server. Two jobs, two finish lines — do not mix them up.
 </p>
 
 <div class="hero-actions">
-  <a class="btn btn-primary" href="#/guide/client-only">Client-only</a>
-  <a class="btn btn-ghost" href="#/guide/server-provider">Server / provider</a>
-  <a class="btn btn-ghost" href="#/guide/choose-path">Choose path</a>
+  <a class="btn btn-primary" href="#/guide/choose-path">Choose your path</a>
+  <a class="btn btn-ghost" href="#/guide/quick-start">Quick start</a>
+  <a class="btn btn-ghost" href="#/guide/how-it-works">How it works</a>
 </div>
 
 </div>
@@ -22,20 +21,31 @@ PAD-bound capture, and a decoded-JPEG audit. Implement the <strong>client</stron
   Do not present outputs as officially compliant.
 </div>
 
+## Two finish lines
+
+| Path | You build | Ceiling | Start here |
+| :--- | :--- | :--- | :--- |
+| **Client-only** | Camera, preview, crop, white JPEG, client audit | `ClientValidated` | [Client-only guide](guide/client-only.md) |
+| **Server / provider** | Session, PAD, frame binding, face count, accept/reject | `ProviderAccepted` | [Server / provider guide](guide/server-provider.md) |
+
+Only a real provider that sets `accepted: true` can reach `ProviderAccepted`. The included mock never does.
+
 <div class="grid-3">
   <div class="card">
     <h3>Client</h3>
-    <p>Camera, mirrored preview, crop, white JPEG ≤ 30 KB, decoded audit. Ceiling: <code>ClientValidated</code>.</p>
-    <p><a href="#/guide/client-only">Guide →</a></p>
+    <p>Browser SDK + mock provider. Good for UX and hard JPEG audit.</p>
+    <p><span class="badge badge-client">ClientValidated</span></p>
+    <p><a href="#/guide/client-only">Client guide →</a></p>
   </div>
   <div class="card">
     <h3>Server</h3>
-    <p>Session, PAD, selected-frame binding, independent face count, accept/reject. Only path to <code>ProviderAccepted</code>.</p>
-    <p><a href="#/guide/server-provider">Guide →</a></p>
+    <p>Trust boundary lives here. Client checks are untrusted for acceptance.</p>
+    <p><span class="badge badge-provider">ProviderAccepted</span></p>
+    <p><a href="#/guide/server-provider">Provider guide →</a></p>
   </div>
   <div class="card">
     <h3>Harness</h3>
-    <p><code>npm test</code> then <code>npm run serve</code> → <code>http://localhost:5173/web/</code></p>
+    <p><code>npm test</code> then <code>npm run serve</code> → localhost:5173/web/</p>
     <p><a href="#/guide/quick-start">Quick start →</a></p>
   </div>
 </div>

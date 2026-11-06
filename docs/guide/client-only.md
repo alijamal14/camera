@@ -1,14 +1,25 @@
 # Client-only implementation
 
-Ship the **browser** half: camera → preview → capture → 480×640 white JPEG → client audit.
+Ship the **browser** half only: camera → preview → capture → 480×640 white JPEG → client audit.
+
 Use [`MockProvider`](https://github.com/alijamal14/camera/blob/main/src/mock-provider.js) (or a stub
 with the same shape) until a real server exists.
 
 <div class="callout callout-ok">
   <strong>Done when</strong>
-  The harness captures a JPEG, hard audit checks pass, and status is <code>ClientValidated</code>.
+  The harness captures a JPEG, hard audit checks pass, and status is
+  <span class="badge badge-client">ClientValidated</span>.
   The mock must <strong>never</strong> return <code>accepted: true</code>.
 </div>
+
+## At a glance
+
+| | |
+| :--- | :--- |
+| **You own** | Camera, preview, crop, compose, encode, client audit |
+| **You do not own** | Authority acceptance, real PAD, independent server face count |
+| **Ceiling** | `ClientValidated` |
+| **Reference wiring** | [`web/app.js`](https://github.com/alijamal14/camera/blob/main/web/app.js) |
 
 ## What this path is not
 
@@ -17,7 +28,7 @@ with the same shape) until a real server exists.
 - Not production `assertManifestReady(manifest, { production: true })` until hashes and server
   runtime are pinned
 
-For the backend contract, see [Server / provider](server-provider.md).
+Need the backend contract? See [Server / provider](server-provider.md).
 
 ## Requirements
 
@@ -32,8 +43,7 @@ npm test
 npm run serve
 ```
 
-Open [http://localhost:5173/web/](http://localhost:5173/web/). The harness in [`web/app.js`](https://github.com/alijamal14/camera/blob/main/web/app.js)
-is the reference wiring.
+Open [http://localhost:5173/web/](http://localhost:5173/web/).
 
 > Agent smoke tests: use `harness-verify` on port **5181** with
 > `--telemetry-dir=%LOCALAPPDATA%/camera-telemetry-verify`. Do not take over 5173 while someone is testing.

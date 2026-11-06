@@ -1,18 +1,27 @@
 # Server / provider implementation
 
-Own everything the browser **must not** be trusted for: session lifetime, PAD on the selected
-evidence frame, an independent full-frame face count, and whether the photo is accepted.
+Build the half the browser **must not** be trusted for: session lifetime, PAD on the selected
+evidence frame, an independent face count, and accept / reject.
 
 [`MockProvider`](https://github.com/alijamal14/camera/blob/main/src/mock-provider.js) is the
-**behaviour spec** for the client SDK. It is not a production backend: it performs no PAD and
+**behaviour spec** for the client SDK — not a production backend. It performs no PAD and
 **never** returns `accepted: true`.
 
 <div class="callout callout-ok">
   <strong>Done when</strong>
   Your provider enforces the state machine below, binds the candidate to the PAD-selected frame,
   counts faces server-side (exactly one), and only then may return <code>accepted: true</code>
-  → client status <code>ProviderAccepted</code>.
+  → client status <span class="badge badge-provider">ProviderAccepted</span>.
 </div>
+
+## At a glance
+
+| | |
+| :--- | :--- |
+| **You own** | Session, PAD, selected-frame binding, independent face count, accept / reject |
+| **You do not own** | DOM preview, MediaPipe VIDEO loop |
+| **Ceiling** | `ProviderAccepted` (only when your server sets `accepted: true`) |
+| **Contract** | [Provider API](provider-api.md) |
 
 ## Trust boundary
 
@@ -21,8 +30,6 @@ evidence frame, an independent full-frame face count, and whether the photo is a
 | UX framing, client face gate, JPEG audit | Treat client checks as **untrusted** for acceptance |
 | Send selected frame + candidate JPEG | PAD on that exact frame; bind `frameId` to the candidate |
 | Show `ClientValidated` | Decide `accepted` only after server verification |
-
-See method tables in [Provider API](provider-api.md).
 
 ## Session state machine
 
@@ -93,9 +100,10 @@ Pin client hashes with `npm run pin-assets` after reviewing versions. Choose and
 runtime and JPEG encoder when the backend is selected. Shared model hashes in the manifest apply
 to both sides.
 
-## Production gates (beyond the API)
+<details>
+<summary>Production gates beyond the API (click to expand)</summary>
 
-From [Architecture](../architecture.md#production-gates):
+From [Architecture — production gates](../architecture.md#production-gates):
 
 - Written approval for synthetic background editing  
 - Real PAD with selected-frame provenance  
@@ -103,6 +111,8 @@ From [Architecture](../architecture.md#production-gates):
 - Pinned hashes and server runtime  
 - Calibrated thresholds (do not promote ADVISORY / PENDING to HARD without data)  
 - Privacy and deletion configuration  
+
+</details>
 
 ## Pitfalls
 

@@ -1,6 +1,14 @@
 # Quick start
 
-Get a working harness on your machine in a few minutes.
+Run the reference harness on your machine in a few minutes.
+
+<div class="callout callout-ok">
+  <strong>Done when</strong>
+  <code>npm test</code> passes, the harness opens at
+  <a href="http://localhost:5173/web/">http://localhost:5173/web/</a>,
+  and you can capture a JPEG with the mock provider
+  (<span class="badge badge-client">ClientValidated</span>).
+</div>
 
 ## Requirements
 
@@ -8,7 +16,7 @@ Get a working harness on your machine in a few minutes.
 - A Chromium-based browser with a camera
 - `localhost` or HTTPS (camera permission)
 
-## Install and test
+## 1. Install and test
 
 ```bash
 npm test
@@ -16,7 +24,7 @@ npm test
 
 All unit tests must pass before you trust a local change.
 
-## Run the harness
+## 2. Run the harness
 
 ```bash
 npm run serve
@@ -31,7 +39,7 @@ program), prints the telemetry store summary, and logs one line per saved bundle
 > `--telemetry-dir=%LOCALAPPDATA%/camera-telemetry-verify`. Do not take over 5173 while someone is
 > already testing.
 
-## Optional review telemetry
+## Optional: review telemetry
 
 On the page, choose **Save captures**: Off / Basic / Diagnostic.
 
@@ -45,7 +53,8 @@ npm run telemetry:purge
 
 Telemetry is off by default and is for developer review only.
 
-## Pin MediaPipe assets (optional)
+<details>
+<summary>Optional: pin MediaPipe assets</summary>
 
 `assets/manifest.json` ships with `sha256: null`. When you are ready to pin versions:
 
@@ -56,8 +65,14 @@ npm run pin-assets
 Review the recorded hashes before committing. Production mode refuses null hashes or an unpinned
 server runtime.
 
+</details>
+
 ## Next
 
-1. [How capture works](how-it-works.md)
-2. [Architecture](../architecture.md)
-3. [Harness check](../skills/harness-check.md) — smoke-test engines and encoder
+| Goal | Page |
+| :--- | :--- |
+| Pick client vs server | [Choose path](choose-path.md) |
+| Wire the browser SDK | [Client-only](client-only.md) |
+| Build a real provider | [Server / provider](server-provider.md) |
+| Pipeline narrative | [How capture works](how-it-works.md) |
+| Smoke-test engines | [Harness check](../skills/harness-check.md) |

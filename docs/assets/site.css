@@ -195,6 +195,27 @@ main {
   color: var(--ink-soft);
 }
 
+.markdown-section td {
+  color: var(--ink-soft);
+  vertical-align: top;
+}
+
+.markdown-section td strong,
+.markdown-section th {
+  color: var(--ink);
+}
+
+.card a {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  text-decoration: none !important;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.card a:hover {
+  border-bottom-color: var(--accent);
+}
+
 .markdown-section a {
   color: var(--accent);
   text-decoration-thickness: 1.5px;
@@ -363,22 +384,95 @@ html[data-theme="dark"] .btn-primary { color: #041018 !important; }
   border-radius: 14px;
   padding: 1rem 1.15rem;
   margin: 1.25rem 0;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  line-height: 1.55;
 }
 
 .callout-warn {
   background: var(--warn-soft);
-  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
 }
 
 .callout-ok {
   background: var(--ok-soft);
-  color: var(--ok);
+  border-color: color-mix(in srgb, var(--ok) 35%, var(--line));
+}
+
+.callout-note {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
 }
 
 .callout strong {
   font-family: var(--font-ui);
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.callout-warn strong { color: var(--warn); }
+.callout-ok strong { color: var(--ok); }
+.callout-note strong { color: var(--accent); }
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.badge-client {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+
+.badge-provider {
+  background: var(--ok-soft);
+  color: var(--ok);
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--line));
+}
+
+/* Progressive disclosure (Starlight / MkDocs-style) */
+.markdown-section details {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  margin: 1.25rem 0;
+}
+
+.markdown-section details summary {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.markdown-section details summary::-webkit-details-marker { display: none; }
+
+.markdown-section details summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 0.45rem;
+  color: var(--accent);
+  transition: transform 0.15s ease;
+}
+
+.markdown-section details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.markdown-section details > *:not(summary) {
+  margin-top: 0.75rem;
 }
 
 .steps {
@@ -448,12 +542,14 @@ html[data-theme="dark"] .steps li::before { color: #041018; }
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1;
-  padding: 0.45rem 0.7rem;
+  padding: 0.5rem 0.75rem;
   white-space: nowrap;
+  min-height: 1.85rem;
 }
 
 .theme-toggle__option:hover {
   color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
 .theme-toggle__option.is-active {
@@ -464,6 +560,18 @@ html[data-theme="dark"] .steps li::before { color: #041018; }
 .theme-toggle__option:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+
+@media (max-width: 480px) {
+  .theme-toggle {
+    right: 0.65rem;
+    bottom: 0.65rem;
+  }
+
+  .theme-toggle__option {
+    font-size: 0.68rem;
+    padding: 0.45rem 0.55rem;
+  }
 }
 
 .sidebar-toggle {
