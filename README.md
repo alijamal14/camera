@@ -10,7 +10,7 @@ Status: prototype. The provider is a labelled mock with no PAD evaluation; resul
 `ClientValidated`, never `ProviderAccepted`. Written approval from the target identity authority for
 synthetic background editing remains a production gate.
 
-Docs (GitHub Pages): http://ali.mk313.com/camera/
+Docs: [ali.mk313.com/camera](https://ali.mk313.com/camera/) (Docsify site with search, sidebar, and agent skills)
 
 ## Run
 

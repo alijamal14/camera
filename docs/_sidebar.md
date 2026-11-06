@@ -1,0 +1,11 @@
+- [Home](/)
+- **Start here**
+  - [Quick start](guide/quick-start.md)
+  - [How capture works](guide/how-it-works.md)
+  - [Privacy rules](guide/privacy.md)
+- **Reference**
+  - [Architecture](architecture.md)
+  - [Quality plan notes](premium-quality-plan-review.md)
+- **Agent skills**
+  - [Harness check](skills/harness-check.md)
+  - [Capture review](skills/capture-review.md)

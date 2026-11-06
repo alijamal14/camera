@@ -3,6 +3,8 @@
 Prototype of the capture SDK. The authoritative product plan lives outside this repository;
 this page maps that plan to code.
 
+> Prefer [How capture works](guide/how-it-works.md) first if you want the pipeline in plain language.
+
 ## Flow
 
 1. Preview: `previewTick(video)` runs VIDEO-mode segmentation and landmarks through the scheduler.
